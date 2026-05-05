@@ -1,0 +1,177 @@
+[
+  {
+    "id": "hc-001",
+    "name": "Monsoon Drape",
+    "slug": "monsoon-drape",
+    "price": 485,
+    "category": "sarees",
+    "subcategory": "handloom",
+    "badge": "New",
+    "images": [
+      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900&q=85",
+      "https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=900&q=85",
+      "https://images.unsplash.com/photo-1594938298603-c8148c4b4a57?w=900&q=85",
+      "https://images.unsplash.com/photo-1570427898212-f84aad85cdc8?w=900&q=85"
+    ],
+    "hoverImage": "https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=700&q=80",
+    "sizes": ["XS", "S", "M", "L", "XL"],
+    "description": "A flowing handloom saree woven by master craftspeople in the Kandy district. Each piece takes three days to complete on a traditional pit loom, creating an intricate texture that is both contemporary and deeply rooted in Sri Lankan heritage.",
+    "fabric": "100% pure handloom cotton with natural dyes sourced from the Knuckles mountain range.",
+    "shipping": "Complimentary shipping on all orders over USD 300. Standard delivery 7–14 business days. Express available.",
+    "tags": ["handloom", "cotton", "natural dye", "kandy"],
+    "featured": true,
+    "newArrival": false
+  },
+  {
+    "id": "hc-002",
+    "name": "Ivory Linen Set",
+    "slug": "ivory-linen-set",
+    "price": 310,
+    "category": "contemporary",
+    "subcategory": "sets",
+    "badge": null,
+    "images": [
+      "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?w=900&q=85",
+      "https://images.unsplash.com/photo-1594938298603-c8148c4b4a57?w=900&q=85",
+      "https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=900&q=85"
+    ],
+    "hoverImage": "https://images.unsplash.com/photo-1594938298603-c8148c4b4a57?w=700&q=80",
+    "sizes": ["XS", "S", "M", "L"],
+    "description": "Effortlessly refined. This kurta-palazzo set is crafted from handwoven linen, produced in a small family-run workshop in Jaffna. The natural ivory tones are achieved without chemical bleaching.",
+    "fabric": "Belgian linen warp, handspun cotton weft. Naturally bleached in sunlight.",
+    "shipping": "Complimentary shipping on all orders over USD 300. Standard delivery 7–14 business days.",
+    "tags": ["linen", "set", "contemporary", "jaffna"],
+    "featured": true,
+    "newArrival": false
+  },
+  {
+    "id": "hc-003",
+    "name": "Cinnamon Pleats",
+    "slug": "cinnamon-pleats",
+    "price": 395,
+    "category": "sarees",
+    "subcategory": "silk",
+    "badge": null,
+    "images": [
+      "https://images.unsplash.com/photo-1570427898212-f84aad85cdc8?w=900&q=85",
+      "https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=900&q=85",
+      "https://images.unsplash.com/photo-1612722432474-b971cdcea546?w=900&q=85"
+    ],
+    "hoverImage": "https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=700&q=80",
+    "sizes": ["Free Size"],
+    "description": "Named for the warmth of freshly harvested cinnamon, this silk saree carries the colour of the spice and the spirit of the island. Woven in Galle with a fine zari border.",
+    "fabric": "Mulberry silk with 22-karat gold zari border. Hand-dyed with natural cinnamon bark extract.",
+    "shipping": "Complimentary shipping on all orders over USD 300. Standard delivery 7–14 business days.",
+    "tags": ["silk", "zari", "galle", "cinnamon"],
+    "featured": true,
+    "newArrival": false
+  },
+  {
+    "id": "hc-004",
+    "name": "Lotus Field",
+    "slug": "lotus-field",
+    "price": 520,
+    "category": "sarees",
+    "subcategory": "silk",
+    "badge": "New",
+    "images": [
+      "https://images.unsplash.com/photo-1612722432474-b971cdcea546?w=900&q=85",
+      "https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=900&q=85",
+      "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=900&q=85"
+    ],
+    "hoverImage": "https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=700&q=80",
+    "sizes": ["Free Size"],
+    "description": "Inspired by the lotus-covered tanks of Anuradhapura. This pure silk saree carries a hand-embroidered lotus motif along the pallu, each bloom requiring four hours of work by a single artisan.",
+    "fabric": "Pure Kanjivaram silk with hand-embroidered silk thread work. Dry clean only.",
+    "shipping": "Complimentary shipping on all orders over USD 300. Express delivery 3–5 days available.",
+    "tags": ["silk", "embroidery", "luxury", "anuradhapura"],
+    "featured": false,
+    "newArrival": true
+  },
+  {
+    "id": "hc-005",
+    "name": "Temple Weave",
+    "slug": "temple-weave",
+    "price": 195,
+    "category": "accessories",
+    "subcategory": "dupattas",
+    "badge": null,
+    "images": [
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=85",
+      "https://images.unsplash.com/photo-1594938298603-c8148c4b4a57?w=900&q=85"
+    ],
+    "hoverImage": "https://images.unsplash.com/photo-1594938298603-c8148c4b4a57?w=700&q=80",
+    "sizes": ["One Size"],
+    "description": "Woven on ancient temple looms in Polonnaruwa, this dupatta carries geometric patterns drawn from the stone carvings of 12th century Sri Lankan architecture.",
+    "fabric": "Handwoven cotton with natural indigo dye. Block-printed border.",
+    "shipping": "Complimentary shipping on all orders over USD 300. Standard delivery 7–14 business days.",
+    "tags": ["dupatta", "cotton", "indigo", "polonnaruwa"],
+    "featured": false,
+    "newArrival": true
+  },
+  {
+    "id": "hc-006",
+    "name": "Dusk Linen Dress",
+    "slug": "dusk-linen-dress",
+    "price": 440,
+    "category": "contemporary",
+    "subcategory": "dresses",
+    "badge": "Limited",
+    "images": [
+      "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=900&q=85",
+      "https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=900&q=85",
+      "https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=900&q=85"
+    ],
+    "hoverImage": "https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=700&q=80",
+    "sizes": ["XS", "S", "M", "L"],
+    "description": "The Dusk dress captures the amber light of a Colombo evening. Cut in a relaxed silhouette from hand-washed linen, it falls with the languid ease of island time.",
+    "fabric": "Enzyme-washed handloom linen. 100% natural fibre. Machine wash cold.",
+    "shipping": "Limited edition — 12 pieces only. Complimentary express shipping worldwide.",
+    "tags": ["linen", "dress", "contemporary", "limited"],
+    "featured": false,
+    "newArrival": true
+  },
+  {
+    "id": "hc-007",
+    "name": "Saffron Trail",
+    "slug": "saffron-trail",
+    "price": 265,
+    "category": "contemporary",
+    "subcategory": "tops",
+    "badge": null,
+    "images": [
+      "https://images.unsplash.com/photo-1551163943-3f7e9e2f10af?w=900&q=85",
+      "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?w=900&q=85"
+    ],
+    "hoverImage": "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?w=700&q=80",
+    "sizes": ["XS", "S", "M", "L", "XL"],
+    "description": "A structured blouse in hand-dyed saffron cotton, designed to be worn with both sarees and contemporary bottoms. The collar references the necklines seen in ancient Sigiriya frescoes.",
+    "fabric": "Handloom cotton dyed with saffron and turmeric. Cold wash only.",
+    "shipping": "Complimentary shipping on all orders over USD 300. Standard delivery 7–14 business days.",
+    "tags": ["cotton", "blouse", "saffron", "sigiriya"],
+    "featured": false,
+    "newArrival": true
+  },
+  {
+    "id": "hc-008",
+    "name": "Ceylon Garden",
+    "slug": "ceylon-garden",
+    "price": 580,
+    "category": "contemporary",
+    "subcategory": "sets",
+    "badge": "New",
+    "images": [
+      "https://images.unsplash.com/photo-1558171813-5fc3c12fa9b9?w=900&q=85",
+      "https://images.unsplash.com/photo-1570427898212-f84aad85cdc8?w=900&q=85",
+      "https://images.unsplash.com/photo-1594938298603-c8148c4b4a57?w=900&q=85"
+    ],
+    "hoverImage": "https://images.unsplash.com/photo-1570427898212-f84aad85cdc8?w=700&q=80",
+    "sizes": ["XS", "S", "M", "L"],
+    "description": "A co-ordinate set inspired by the botanical gardens of Peradeniya. Block-printed botanicals on handwoven cotton create a garment that feels both wild and considered.",
+    "fabric": "Handwoven cotton with botanical block print using plant-based inks. Hand wash cold.",
+    "shipping": "Complimentary shipping on all orders over USD 300. Standard delivery 7–14 business days.",
+    "tags": ["cotton", "set", "block print", "peradeniya"],
+    "featured": false,
+    "newArrival": true
+  }
+]

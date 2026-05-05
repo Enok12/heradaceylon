@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ease-silk: cubic-bezier(0.43, 0.13, 0.23, 0.96);
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-luxury: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Jost', 'Helvetica Neue', sans-serif;
+  background-color: #F7F3EE;
+  color: #1A1A1A;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: #F0EAE0; }
+::-webkit-scrollbar-thumb { background: #CDB99E; }
+
+/* ── UNDERLINE LINK ANIMATION ── */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 0.5px;
+  background: currentColor;
+  transition: width 0.5s var(--ease-reveal);
+}
+.link-underline:hover::after { width: 100%; }
+
+/* ── TICKER ── */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-animate { animation: ticker 32s linear infinite; }
+
+/* ── HERO BG ZOOM ── */
+@keyframes heroZoom {
+  0% { transform: scale(1.08); }
+  100% { transform: scale(1.0); }
+}
+.hero-zoom { animation: heroZoom 14s var(--ease-luxury) forwards; }
+
+/* ── HERO FADE UP ── */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-fade-up {
+  opacity: 0;
+  animation: heroFadeUp 1.2s var(--ease-reveal) 0.5s forwards;
+}
+.hero-fade-up-2 {
+  opacity: 0;
+  animation: heroFadeUp 1.2s var(--ease-reveal) 0.7s forwards;
+}
+
+/* ── LOADER ── */
+@keyframes loaderLine {
+  from { width: 0; }
+  to   { width: 100px; }
+}
+.loader-line { animation: loaderLine 1.4s var(--ease-reveal) 0.4s forwards; width: 0; }
+
+/* ── CART SCROLLBAR ── */
+.cart-scroll { overflow-y: auto; }
+.cart-scroll::-webkit-scrollbar { width: 2px; }
+.cart-scroll::-webkit-scrollbar-thumb { background: #CDB99E; }
+
+/* ── HORIZONTAL SCROLL SNAP ── */
+.scroll-snap-x { scroll-snap-type: x mandatory; }
+.scroll-snap-item { scroll-snap-align: start; }
+
+/* ── ACCORDION ── */
+.accordion-content {
+  overflow: hidden;
+  transition: height 0.5s var(--ease-silk);
+}
+
+/* ── IMAGE SWAP ── */
+.img-swap-primary { transition: opacity 0.65s var(--ease-luxury); }
+.img-swap-secondary {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 0.65s var(--ease-luxury);
+}
+.group:hover .img-swap-primary { opacity: 0; }
+.group:hover .img-swap-secondary { opacity: 1; }
