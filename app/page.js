@@ -11,10 +11,10 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <NewArrivals products={products} />
       <Ticker />
       <FeaturedCollection products={products} />
       <CategoryBlocks />
-      <NewArrivals products={products} />
       <EditorialBanner />
       <BrandStory />
     </>

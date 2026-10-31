@@ -1,6 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavScroll } from '@/hooks/useNavScroll'
 import { useCart } from '@/context/CartContext'
@@ -15,19 +16,30 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const { scrolled, hidden } = useNavScroll()
+  const pathname = usePathname()
   const { count, setIsOpen } = useCart()
   const [menuOpen, setMenuOpen] = useState(false)
+
+  // White text only at the top of the home page; black on white once scrolled.
+  // The theme is frozen while the nav is hidden so it doesn't flash as it slides away.
+  const [onHero, setOnHero] = useState(pathname === '/')
+  useEffect(() => {
+    if (!hidden) setOnHero(pathname === '/' && !scrolled)
+  }, [hidden, scrolled, pathname])
+  const text = onHero ? 'text-white' : 'text-charcoal'
+  const bar = onHero ? 'bg-white' : 'bg-charcoal'
+  const badge = onHero ? 'bg-white text-charcoal' : 'bg-charcoal text-white'
 
   return (
     <>
       {/* Desktop Navbar */}
       <motion.nav
         animate={{ y: hidden ? '-100%' : '0%' }}
-        transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-          scrolled
-            ? 'bg-cream/95 backdrop-blur-sm shadow-[0_1px_0_rgba(0,0,0,0.06)]'
-            : 'bg-transparent'
+        transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+          onHero
+            ? 'bg-transparent'
+            : 'bg-white/95 backdrop-blur-sm shadow-[0_1px_0_rgba(0,0,0,0.08)]'
         }`}
         style={{ height: 72 }}
       >
@@ -35,7 +47,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="font-serif text-[19px] font-light tracking-[0.22em] uppercase text-charcoal no-underline z-10"
+            className={`font-serif text-[19px] font-semibold tracking-[0.22em] uppercase no-underline z-10 transition-colors duration-200 ${text}`}
           >
             Herada Ceylon
           </Link>
@@ -44,7 +56,7 @@ export default function Navbar() {
           <ul className="hidden md:flex gap-8 absolute left-1/2 -translate-x-1/2 list-none">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={label}>
-                <Link href={href} className="link-underline text-[10px] tracking-[0.18em] uppercase font-light text-charcoal">
+                <Link href={href} className={`link-underline text-[11px] tracking-[0.18em] uppercase font-medium transition-colors duration-200 ${text}`}>
                   {label}
                 </Link>
               </li>
@@ -55,10 +67,10 @@ export default function Navbar() {
           <div className="flex items-center gap-6 z-10">
             <button
               onClick={() => setIsOpen(true)}
-              className="hidden md:flex items-center gap-1 text-[10px] tracking-[0.18em] uppercase font-light text-charcoal hover:opacity-60 transition-opacity duration-300"
+              className={`hidden md:flex items-center gap-1 text-[11px] tracking-[0.18em] uppercase font-medium hover:opacity-60 transition-all duration-200 ${text}`}
             >
               Bag
-              <span className="inline-flex items-center justify-center w-4 h-4 bg-charcoal text-cream text-[9px] rounded-full ml-1">
+              <span className={`inline-flex items-center justify-center w-4 h-4 text-[9px] font-medium rounded-full ml-1 transition-colors duration-200 ${badge}`}>
                 {count}
               </span>
             </button>
@@ -69,17 +81,17 @@ export default function Navbar() {
               className="flex md:hidden flex-col gap-[5px] cursor-pointer"
               aria-label="Open menu"
             >
-              <span className="w-[22px] h-px bg-charcoal block" />
-              <span className="w-[22px] h-px bg-charcoal block" />
-              <span className="w-[14px] h-px bg-charcoal block" />
+              <span className={`w-[22px] h-[1.5px] block transition-colors duration-200 ${bar}`} />
+              <span className={`w-[22px] h-[1.5px] block transition-colors duration-200 ${bar}`} />
+              <span className={`w-[14px] h-[1.5px] block transition-colors duration-200 ${bar}`} />
             </button>
 
             {/* Mobile cart */}
             <button
               onClick={() => setIsOpen(true)}
-              className="flex md:hidden items-center text-[10px] tracking-[0.18em] uppercase font-light text-charcoal"
+              className={`flex md:hidden items-center text-[11px] tracking-[0.18em] uppercase font-medium ${text}`}
             >
-              <span className="inline-flex items-center justify-center w-5 h-5 bg-charcoal text-cream text-[9px] rounded-full">
+              <span className={`inline-flex items-center justify-center w-5 h-5 text-[9px] font-medium rounded-full transition-colors duration-200 ${badge}`}>
                 {count}
               </span>
             </button>
@@ -99,7 +111,7 @@ export default function Navbar() {
           >
             <button
               onClick={() => setMenuOpen(false)}
-              className="absolute top-6 right-8 text-2xl font-light text-charcoal"
+              className="absolute top-6 right-8 text-2xl font-normal text-charcoal"
               aria-label="Close menu"
             >
               ✕
@@ -115,14 +127,14 @@ export default function Navbar() {
                   <Link
                     href={href}
                     onClick={() => setMenuOpen(false)}
-                    className="font-serif text-[40px] font-light text-charcoal no-underline leading-tight hover:text-gold transition-colors duration-300 block"
+                    className="font-serif text-[40px] font-medium text-charcoal no-underline leading-tight hover:text-gold transition-colors duration-300 block"
                   >
                     {label}
                   </Link>
                 </motion.li>
               ))}
             </ul>
-            <div className="mt-auto text-[9px] tracking-[0.2em] uppercase text-muted font-light">
+            <div className="mt-auto text-[9px] tracking-[0.2em] uppercase text-muted font-normal">
               Herada Ceylon · Sri Lanka
             </div>
           </motion.div>

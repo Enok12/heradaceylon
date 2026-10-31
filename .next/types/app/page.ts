@@ -1,4 +1,4 @@
-// File: D:\Herada-ceylon\app\page.js
+// File: C:\Users\R E V O\Documents\GitHub\heradaceylon\app\page.js
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

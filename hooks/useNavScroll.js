@@ -10,10 +10,13 @@ export function useNavScroll() {
     const onScroll = () => {
       const y = window.scrollY
       setScrolled(y > 60)
-      if (y > lastY.current + 8 && y > 200) setHidden(true)
-      else if (y < lastY.current - 4) setHidden(false)
+      // Hide the moment the user scrolls down; reveal on scroll up or at the top
+      if (y <= 0) setHidden(false)
+      else if (y > lastY.current) setHidden(true)
+      else if (y < lastY.current) setHidden(false)
       lastY.current = y
     }
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
