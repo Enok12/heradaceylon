@@ -1,66 +1,42 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 
+// focus / focusMd: object-position on portrait phones / portrait tablets, where only a
+// narrow slice of each ~16:9 photo shows. Each keeps the model in frame and the printed
+// lettering fully out of frame rather than half-cut. Landscape screens stay centred.
 const SLIDES = [
-  {
-    image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1800&q=85',
-    eyebrow: 'New Collection 2025',
-    title: ['Woven from', "Ceylon's", 'Soul'],
-    copy: 'Heritage textiles, reimagined for the modern woman. Handcrafted in Sri Lanka.',
-    href: '/collections',
-    cta: 'Discover Collection',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=1800&q=85',
-    eyebrow: 'The Saree Edit',
-    title: ['Draped in', 'Timeless', 'Grace'],
-    copy: 'Handloom sarees woven by artisans across the island, thread by thread.',
-    href: '/collections?category=sarees',
-    cta: 'Shop Sarees',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=1800&q=85',
-    eyebrow: 'Contemporary',
-    title: ['Heritage,', 'Made', 'Modern'],
-    copy: 'Clean silhouettes cut from traditional cloth for everyday elegance.',
-    href: '/collections?category=contemporary',
-    cta: 'Explore Contemporary',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1800&q=85',
-    eyebrow: 'Just Arrived',
-    title: ['Colours of', 'the', 'Island'],
-    copy: 'Fresh pieces inspired by monsoon skies, spice markets and tea country.',
-    href: '/collections?filter=new',
-    cta: 'View New Arrivals',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1800&q=85',
-    eyebrow: 'Our Story',
-    title: ['Crafted', 'with', 'Intention'],
-    copy: 'Slow fashion rooted in community, craft and the hands that make it.',
-    href: '#story',
-    cta: 'Read Our Story',
-  },
+  { image: '/images/hero/cover-1.jpg', focus: '18%', focusMd: '0%', alt: 'Model in a black suit standing beside the Herada Ceylon wordmark' },
+  { image: '/images/hero/cover-2.jpg', focus: '85%', focusMd: '100%', alt: 'Model in a black blazer and skirt seated on a wooden stool' },
+  { image: '/images/hero/cover-4.jpg', focus: '27%', focusMd: '10%', alt: 'Model in a black overcoat walking beside the words December Drop' },
 ]
 
 const AUTOPLAY_MS = 6500
 const EASE = [0.16, 1, 0.3, 1]
 
-// Image: incoming slides in from the travel side while fading and settling from a zoom;
-// outgoing drifts the opposite way, fading out underneath
-const imageVariants = {
-  enter: (dir) => ({ x: dir > 0 ? '12%' : '-12%', opacity: 0, scale: 1.12, zIndex: 2 }),
-  center: { x: '0%', opacity: 1, scale: 1, zIndex: 2 },
-  exit: (dir) => ({ x: dir > 0 ? '-8%' : '8%', opacity: 0, scale: 1.04, zIndex: 1 }),
+const WIPE_EASE = [0.77, 0, 0.175, 1]
+
+// Curtain wipe: the incoming slide is uncovered by an edge sweeping in from the travel
+// side, while the outgoing slide underneath drifts the opposite way (parallax).
+const FULL = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'
+const slideVariants = {
+  enter: (dir) => ({
+    clipPath: dir > 0
+      ? 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)'
+      : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)',
+    x: '0%',
+    zIndex: 2,
+  }),
+  center: { clipPath: FULL, x: '0%', zIndex: 2 },
+  exit: (dir) => ({ clipPath: FULL, x: dir > 0 ? '-18%' : '18%', zIndex: 1 }),
 }
 
-const textVariants = {
-  enter: (dir) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (dir) => ({ x: dir > 0 ? -40 : 40, opacity: 0 }),
+// The photo inside the incoming curtain trails the edge slightly, so it glides into place
+const photoVariants = {
+  enter: (dir) => ({ x: dir > 0 ? '22%' : '-22%' }),
+  center: { x: '0%' },
 }
 
 export default function Hero() {
@@ -84,17 +60,17 @@ export default function Hero() {
   }, [index, nextSlide])
 
   return (
-    <section className="relative h-screen overflow-hidden flex items-end bg-espresso">
+    <section className="relative h-screen overflow-hidden bg-[#F4F1EC]">
       {/* Background slides */}
-      <AnimatePresence initial={false} custom={dir}>
+      <AnimatePresence custom={dir}>
         <motion.div
           key={index}
           custom={dir}
-          variants={imageVariants}
+          variants={slideVariants}
           initial="enter"
           animate="center"
           exit="exit"
-          transition={{ duration: 1.3, ease: EASE }}
+          transition={{ duration: 1.25, ease: WIPE_EASE }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.15}
@@ -102,46 +78,48 @@ export default function Hero() {
             if (offset.x < -80 || velocity.x < -500) nextSlide()
             else if (offset.x > 80 || velocity.x > 500) prevSlide()
           }}
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat cursor-grab active:cursor-grabbing"
-          style={{ backgroundImage: `url('${slide.image}')` }}
-        />
+          className="absolute inset-0 overflow-hidden cursor-grab active:cursor-grabbing"
+        >
+          <motion.div
+            custom={dir}
+            variants={photoVariants}
+            transition={{ duration: 1.25, ease: WIPE_EASE }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={slide.image}
+              alt={slide.alt}
+              fill
+              priority={index === 0}
+              // Portrait screens crop a ~16:9 photo to a narrow slice, so it renders ~4x the viewport width
+              sizes="(orientation: portrait) 400vw, 100vw"
+              quality={90}
+              draggable={false}
+              className="object-cover select-none object-[var(--focus)] md:portrait:object-[var(--focus-md)] landscape:object-center"
+              style={{ '--focus': `${slide.focus} center`, '--focus-md': `${slide.focusMd} center` }}
+            />
+          </motion.div>
+        </motion.div>
       </AnimatePresence>
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 z-[3] pointer-events-none bg-gradient-to-t from-espresso/60 via-espresso/10 to-transparent" />
+      {/* Soft top shade so the white navbar stays legible over the light photos */}
+      <div className="absolute inset-x-0 top-0 h-40 z-[3] pointer-events-none bg-gradient-to-b from-black/35 to-transparent" />
 
-      {/* Content */}
-      <div className="relative z-10 px-8 md:px-16 pb-28 max-w-2xl pointer-events-none">
-        <AnimatePresence mode="wait" initial={false} custom={dir}>
+      {/* Shop Now, bottom centre */}
+      <div className="absolute inset-x-0 bottom-20 lg:bottom-12 z-10 flex justify-center pointer-events-none">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={index}
-            custom={dir}
-            variants={textVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.25 }}
           >
-            <p className="flex items-center gap-3 text-[9px] tracking-[0.28em] uppercase text-sand/80 font-light mb-6">
-              <span className="w-9 h-px bg-sand/60 inline-block" />
-              {slide.eyebrow}
-            </p>
-            <h1
-              className="font-serif font-light text-[#F9F5F0] leading-[0.93] tracking-[-0.01em] mb-8"
-              style={{ fontSize: 'clamp(60px, 9vw, 108px)' }}
-            >
-              {slide.title[0]}<br />
-              <em className="italic">{slide.title[1]}</em><br />
-              {slide.title[2]}
-            </h1>
-            <p className="text-[11px] tracking-[0.14em] uppercase text-cream/60 font-light mb-10 max-w-xs leading-loose">
-              {slide.copy}
-            </p>
             <Link
-              href={slide.href}
-              className="pointer-events-auto inline-flex items-center gap-4 text-[10px] tracking-[0.22em] uppercase text-cream border border-cream/40 px-9 py-4 hover:border-cream/90 hover:bg-cream/10 transition-all duration-500 group"
+              href="/collections"
+              className="pointer-events-auto inline-flex items-center gap-4 bg-charcoal text-white text-[11px] tracking-[0.24em] uppercase font-medium px-10 py-4 hover:bg-white hover:text-charcoal border border-charcoal transition-all duration-500 group"
             >
-              {slide.cta}
+              Shop Now
               <span className="relative inline-block w-6 h-px bg-current transition-all duration-500 group-hover:w-10">
                 <span className="absolute -right-px -top-[3px] w-[6px] h-[6px] border-r border-t border-current rotate-45" />
               </span>
@@ -150,52 +128,51 @@ export default function Hero() {
         </AnimatePresence>
       </div>
 
-      {/* Progress + controls */}
-      <div className="absolute left-8 right-8 md:left-16 md:right-16 bottom-10 z-10 flex items-center gap-6">
-        <span className="font-serif text-cream text-[15px] tabular-nums">
+      {/* Progress, bottom-right corner */}
+      <div className="absolute right-6 md:right-8 bottom-5 z-10 flex items-center gap-4">
+        <span className="text-[11px] tracking-[0.16em] text-charcoal font-medium tabular-nums">
           {String(index + 1).padStart(2, '0')}
-          <span className="text-cream/40"> / {String(SLIDES.length).padStart(2, '0')}</span>
         </span>
-
-        <div className="flex flex-1 gap-2 max-w-sm">
+        <div className="flex gap-2 w-40 md:w-56">
           {SLIDES.map((_, i) => (
             <button
               key={i}
               onClick={() => go(i)}
               aria-label={`Go to slide ${i + 1}`}
-              className="relative flex-1 h-[2px] bg-cream/25 overflow-hidden py-0"
+              className="relative flex-1 h-[2px] bg-charcoal/20 overflow-hidden"
             >
               {i === index && (
                 <motion.span
                   key={index}
-                  className="absolute inset-y-0 left-0 bg-cream"
+                  className="absolute inset-y-0 left-0 bg-charcoal"
                   initial={{ width: '0%' }}
                   animate={{ width: '100%' }}
                   transition={{ duration: AUTOPLAY_MS / 1000, ease: 'linear' }}
                 />
               )}
-              {i < index && <span className="absolute inset-0 bg-cream/70" />}
+              {i < index && <span className="absolute inset-0 bg-charcoal/70" />}
             </button>
           ))}
         </div>
-
-        <div className="ml-auto flex gap-3">
-          <button
-            onClick={prevSlide}
-            aria-label="Previous slide"
-            className="w-10 h-10 border border-cream/40 text-cream flex items-center justify-center hover:bg-cream/10 hover:border-cream/90 transition-all duration-300"
-          >
-            ←
-          </button>
-          <button
-            onClick={nextSlide}
-            aria-label="Next slide"
-            className="w-10 h-10 border border-cream/40 text-cream flex items-center justify-center hover:bg-cream/10 hover:border-cream/90 transition-all duration-300"
-          >
-            →
-          </button>
-        </div>
+        <span className="text-[11px] tracking-[0.16em] text-charcoal/50 font-medium tabular-nums">
+          {String(SLIDES.length).padStart(2, '0')}
+        </span>
       </div>
+
+      {/* Side arrows: below the large mid-height lettering, where every photo is open wall */}
+      {[
+        { label: 'Previous slide', onClick: prevSlide, side: 'left-8', arrow: '←' },
+        { label: 'Next slide', onClick: nextSlide, side: 'right-8', arrow: '→' },
+      ].map(({ label, onClick, side, arrow }) => (
+        <button
+          key={label}
+          onClick={onClick}
+          aria-label={label}
+          className={`hidden md:flex absolute top-[64%] ${side} z-10 w-11 h-11 items-center justify-center border border-charcoal/30 text-charcoal bg-white/40 backdrop-blur-sm hover:bg-charcoal hover:text-white hover:border-charcoal transition-all duration-300`}
+        >
+          {arrow}
+        </button>
+      ))}
     </section>
   )
 }

@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
+import { useNavScroll } from '@/hooks/useNavScroll'
 import ProductGallery from '@/components/ProductGallery'
 import Accordion from '@/components/Accordion'
 import ProductCard from '@/components/ProductCard'
@@ -18,6 +20,7 @@ export default function ProductPage({ params }) {
   const [selectedSize, setSelectedSize] = useState(product.sizes[0])
   const [added, setAdded] = useState(false)
   const [showStickyBar, setShowStickyBar] = useState(false)
+  const { hidden: navHidden } = useNavScroll()
   const addBtnRef = useRef(null)
   const related = products.filter(p => p.id !== product.id && p.category === product.category).slice(0, 4)
   const relatedTrack = useRef(null)
@@ -58,18 +61,37 @@ export default function ProductPage({ params }) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -60, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-[72px] left-0 right-0 z-40 bg-cream/95 backdrop-blur-sm border-b border-sand px-8 md:px-16 py-3 flex items-center justify-between"
+            // Slides up into the navbar's space while the navbar is hidden
+            className={`fixed left-0 right-0 z-40 bg-white shadow-[0_6px_24px_rgba(0,0,0,0.08)] border-b border-sand transition-[top] duration-200 ${navHidden ? 'top-0' : 'top-[72px]'}`}
           >
-            <div>
-              <span className="font-serif text-[17px] font-light text-charcoal">{product.name}</span>
-              <span className="ml-4 text-[12px] text-muted font-light">USD {product.price}</span>
+            <div className="flex items-center gap-4 md:gap-6 px-4 md:px-16 py-3">
+              <div className="relative w-[52px] h-[64px] md:w-[64px] md:h-[80px] flex-shrink-0 rounded-md overflow-hidden bg-sand">
+                <Image src={product.images[0]} alt={product.name} fill className="object-cover" sizes="64px" />
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] md:text-[14px] tracking-[0.08em] uppercase font-medium text-charcoal truncate">
+                  {product.name}
+                </p>
+                <p className="text-[11px] md:text-[12px] tracking-[0.08em] uppercase text-muted mt-0.5">
+                  <span className="hidden sm:inline">{product.subcategory} / </span>Size {selectedSize}
+                </p>
+                <p className="text-[12px] md:text-[13px] tracking-[0.06em] font-medium text-charcoal mt-0.5">
+                  USD {product.price.toLocaleString()}
+                </p>
+              </div>
+
+              <button
+                onClick={handleAdd}
+                className={`flex-shrink-0 px-5 md:px-10 py-3 md:py-3.5 text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium border transition-all duration-300 ${
+                  added
+                    ? 'bg-gold border-gold text-white'
+                    : 'border-charcoal text-charcoal hover:bg-charcoal hover:text-white'
+                }`}
+              >
+                {added ? '✓ Added' : 'Add to Bag'}
+              </button>
             </div>
-            <button
-              onClick={handleAdd}
-              className="px-8 py-2.5 bg-charcoal text-cream text-[9px] tracking-[0.22em] uppercase font-light hover:bg-espresso transition-all duration-300"
-            >
-              Add to Bag — {selectedSize}
-            </button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -96,7 +118,9 @@ export default function ProductPage({ params }) {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="md:sticky md:top-[92px] md:self-start py-2"
+          // Stays pinned while the stacked gallery scrolls past; capped to the viewport so
+          // a long info column (open accordion) scrolls inside itself instead of the page
+          className="md:sticky md:top-[96px] md:self-start md:max-h-[calc(100vh-112px)] md:overflow-y-auto no-scrollbar py-2"
         >
           {/* Category + Badge */}
           <div className="flex items-center gap-3 mb-4">

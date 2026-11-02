@@ -43,17 +43,28 @@ export default function Navbar() {
         }`}
         style={{ height: 72 }}
       >
-        <div className="flex items-center justify-between h-full px-8 md:px-12">
-          {/* Logo */}
+        <div className="relative flex items-center justify-between h-full px-6 md:px-12">
+          {/* Hamburger (tablet + mobile), left */}
+          <button
+            onClick={() => setMenuOpen(true)}
+            className="flex xl:hidden flex-col gap-[5px] cursor-pointer z-10 py-2"
+            aria-label="Open menu"
+          >
+            <span className={`w-[22px] h-[1.5px] block transition-colors duration-200 ${bar}`} />
+            <span className={`w-[22px] h-[1.5px] block transition-colors duration-200 ${bar}`} />
+            <span className={`w-[14px] h-[1.5px] block transition-colors duration-200 ${bar}`} />
+          </button>
+
+          {/* Logo: centered on tablet + mobile, left on desktop */}
           <Link
             href="/"
-            className={`font-serif text-[19px] font-semibold tracking-[0.22em] uppercase no-underline z-10 transition-colors duration-200 ${text}`}
+            className={`absolute left-1/2 -translate-x-1/2 xl:static xl:translate-x-0 font-serif text-[17px] md:text-[19px] font-semibold tracking-[0.22em] uppercase no-underline whitespace-nowrap z-10 transition-colors duration-200 ${text}`}
           >
             Herada Ceylon
           </Link>
 
-          {/* Center Nav */}
-          <ul className="hidden md:flex gap-8 absolute left-1/2 -translate-x-1/2 list-none">
+          {/* Center Nav (desktop only) */}
+          <ul className="hidden xl:flex gap-8 absolute left-1/2 -translate-x-1/2 list-none">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={label}>
                 <Link href={href} className={`link-underline text-[11px] tracking-[0.18em] uppercase font-medium transition-colors duration-200 ${text}`}>
@@ -67,7 +78,7 @@ export default function Navbar() {
           <div className="flex items-center gap-6 z-10">
             <button
               onClick={() => setIsOpen(true)}
-              className={`hidden md:flex items-center gap-1 text-[11px] tracking-[0.18em] uppercase font-medium hover:opacity-60 transition-all duration-200 ${text}`}
+              className={`hidden xl:flex items-center gap-1 text-[11px] tracking-[0.18em] uppercase font-medium hover:opacity-60 transition-all duration-200 ${text}`}
             >
               Bag
               <span className={`inline-flex items-center justify-center w-4 h-4 text-[9px] font-medium rounded-full ml-1 transition-colors duration-200 ${badge}`}>
@@ -75,21 +86,11 @@ export default function Navbar() {
               </span>
             </button>
 
-            {/* Hamburger */}
-            <button
-              onClick={() => setMenuOpen(true)}
-              className="flex md:hidden flex-col gap-[5px] cursor-pointer"
-              aria-label="Open menu"
-            >
-              <span className={`w-[22px] h-[1.5px] block transition-colors duration-200 ${bar}`} />
-              <span className={`w-[22px] h-[1.5px] block transition-colors duration-200 ${bar}`} />
-              <span className={`w-[14px] h-[1.5px] block transition-colors duration-200 ${bar}`} />
-            </button>
-
-            {/* Mobile cart */}
+            {/* Tablet + mobile cart */}
             <button
               onClick={() => setIsOpen(true)}
-              className={`flex md:hidden items-center text-[11px] tracking-[0.18em] uppercase font-medium ${text}`}
+              aria-label="Open bag"
+              className={`flex xl:hidden items-center text-[11px] tracking-[0.18em] uppercase font-medium ${text}`}
             >
               <span className={`inline-flex items-center justify-center w-5 h-5 text-[9px] font-medium rounded-full transition-colors duration-200 ${badge}`}>
                 {count}
