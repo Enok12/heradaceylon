@@ -13,13 +13,13 @@ export default function Accordion({ items }) {
             onClick={() => setOpen(open === i ? -1 : i)}
             className="w-full flex items-center justify-between py-5 text-left group"
           >
-            <span className="text-[10px] tracking-[0.2em] uppercase font-light text-charcoal group-hover:text-gold transition-colors duration-300">
+            <span className="text-[10px] tracking-[0.2em] uppercase font-normal text-charcoal group-hover:text-gold transition-colors duration-300">
               {item.title}
             </span>
             <motion.span
               animate={{ rotate: open === i ? 45 : 0 }}
               transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-              className="text-lg font-light text-charcoal/50 group-hover:text-gold transition-colors duration-300 leading-none"
+              className="text-lg font-normal text-charcoal/50 group-hover:text-gold transition-colors duration-300 leading-none"
             >
               +
             </motion.span>
@@ -33,7 +33,7 @@ export default function Accordion({ items }) {
                 transition={{ duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] }}
                 className="overflow-hidden"
               >
-                <p className="text-[12px] leading-loose text-muted font-light tracking-[0.03em] pb-6 max-w-md">
+                <p className="text-[12px] leading-loose text-muted font-normal tracking-[0.03em] pb-6 max-w-md">
                   {item.content}
                 </p>
               </motion.div>

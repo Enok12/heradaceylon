@@ -1,11 +1,12 @@
 'use client'
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import ProductCard from '@/components/ProductCard'
 import { SectionLabel } from '@/components/ui'
 import products from '@/data/products.json'
+import { inCategory } from '@/lib/categories'
 
 const CATEGORIES = ['All', 'Sarees', 'Contemporary', 'Accessories']
 const SORT_OPTIONS = [
@@ -19,9 +20,12 @@ export default function CollectionsPage() {
   const initCat = searchParams.get('category') || 'all'
   const initFilter = searchParams.get('filter') || ''
 
-  const [activeCategory, setActiveCategory] = useState(
-    initCat !== 'all' ? initCat.charAt(0).toUpperCase() + initCat.slice(1) : 'All'
-  )
+  const urlCategory = initCat !== 'all' ? initCat.charAt(0).toUpperCase() + initCat.slice(1) : 'All'
+  const [activeCategory, setActiveCategory] = useState(urlCategory)
+  // The page stays mounted when only the query string changes (e.g. navbar Sarees → Contemporary)
+  useEffect(() => setActiveCategory(urlCategory), [urlCategory])
+  // Categories reached by link that aren't standard tabs (Women, Men, Bags) get a tab of their own
+  const tabs = CATEGORIES.includes(urlCategory) ? CATEGORIES : [...CATEGORIES, urlCategory]
   const [sort, setSort] = useState('new')
   const [sortOpen, setSortOpen] = useState(false)
   const headerRef = useRef(null)
@@ -30,7 +34,7 @@ export default function CollectionsPage() {
   const filtered = useMemo(() => {
     let list = [...products]
     if (initFilter === 'new') list = list.filter(p => p.newArrival || p.badge === 'New')
-    if (activeCategory !== 'All') list = list.filter(p => p.category === activeCategory.toLowerCase())
+    if (activeCategory !== 'All') list = list.filter(p => inCategory(p, activeCategory.toLowerCase()))
     if (sort === 'asc') list.sort((a, b) => a.price - b.price)
     else if (sort === 'desc') list.sort((a, b) => b.price - a.price)
     return list
@@ -56,7 +60,7 @@ export default function CollectionsPage() {
                 {initFilter === 'new' ? 'Just Arrived' : 'All Collections'}
               </span>
             </SectionLabel>
-            <h1 className="font-serif text-[clamp(40px,6vw,72px)] font-light text-cream leading-[1]">
+            <h1 className="font-serif text-[clamp(40px,6vw,72px)] font-normal text-cream leading-[1]">
               {initFilter === 'new' ? 'New Arrivals' : <><em className="italic">Herada</em> Collections</>}
             </h1>
           </motion.div>
@@ -68,11 +72,11 @@ export default function CollectionsPage() {
         <div className="flex items-center justify-between flex-wrap gap-4">
           {/* Category Tabs */}
           <div className="flex gap-1 flex-wrap">
-            {CATEGORIES.map(cat => (
+            {tabs.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`text-[9px] tracking-[0.18em] uppercase px-4 py-2 font-light transition-all duration-300 ${
+                className={`text-[9px] tracking-[0.18em] uppercase px-4 py-2 font-normal transition-all duration-300 ${
                   activeCategory === cat
                     ? 'bg-charcoal text-cream'
                     : 'text-muted hover:text-charcoal'
@@ -85,13 +89,13 @@ export default function CollectionsPage() {
 
           {/* Count + Sort */}
           <div className="flex items-center gap-6">
-            <span className="text-[9px] tracking-[0.14em] uppercase text-muted font-light">
+            <span className="text-[9px] tracking-[0.14em] uppercase text-muted font-normal">
               {filtered.length} pieces
             </span>
             <div className="relative">
               <button
                 onClick={() => setSortOpen(o => !o)}
-                className="flex items-center gap-2 text-[9px] tracking-[0.18em] uppercase text-charcoal font-light hover:text-gold transition-colors duration-300"
+                className="flex items-center gap-2 text-[9px] tracking-[0.18em] uppercase text-charcoal font-normal hover:text-gold transition-colors duration-300"
               >
                 Sort: {SORT_OPTIONS.find(s => s.value === sort)?.label}
                 <span className={`text-[8px] transition-transform duration-300 ${sortOpen ? 'rotate-180' : ''}`}>▾</span>
@@ -109,7 +113,7 @@ export default function CollectionsPage() {
                       <button
                         key={opt.value}
                         onClick={() => { setSort(opt.value); setSortOpen(false) }}
-                        className={`block w-full text-left px-5 py-3 text-[9px] tracking-[0.16em] uppercase font-light transition-colors duration-200 ${
+                        className={`block w-full text-left px-5 py-3 text-[9px] tracking-[0.16em] uppercase font-normal transition-colors duration-200 ${
                           sort === opt.value ? 'text-charcoal bg-linen' : 'text-muted hover:text-charcoal hover:bg-linen'
                         }`}
                       >
@@ -143,10 +147,10 @@ export default function CollectionsPage() {
 
         {filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-32 text-center">
-            <p className="text-[10px] tracking-[0.2em] uppercase text-muted font-light mb-3">No pieces found</p>
+            <p className="text-[10px] tracking-[0.2em] uppercase text-muted font-normal mb-3">No pieces found</p>
             <button
               onClick={() => setActiveCategory('All')}
-              className="text-[9px] tracking-[0.18em] uppercase text-charcoal border-b border-charcoal pb-0.5 hover:text-gold hover:border-gold transition-colors duration-300 font-light"
+              className="text-[9px] tracking-[0.18em] uppercase text-charcoal border-b border-charcoal pb-0.5 hover:text-gold hover:border-gold transition-colors duration-300 font-normal"
             >
               View all collections
             </button>

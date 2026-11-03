@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: 'Sarees', href: '/collections?category=sarees' },
   { label: 'Contemporary', href: '/collections?category=contemporary' },
   { label: 'Our Story', href: '#story' },
+  { label: 'Test Page', href: '/test' },
 ]
 
 export default function Navbar() {
@@ -64,7 +65,7 @@ export default function Navbar() {
           </Link>
 
           {/* Center Nav (desktop only) */}
-          <ul className="hidden xl:flex gap-8 absolute left-1/2 -translate-x-1/2 list-none">
+          <ul className="hidden xl:flex gap-6 2xl:gap-8 absolute left-1/2 -translate-x-1/2 list-none whitespace-nowrap">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={label}>
                 <Link href={href} className={`link-underline text-[11px] tracking-[0.18em] uppercase font-medium transition-colors duration-200 ${text}`}>

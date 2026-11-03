@@ -26,19 +26,19 @@ export default function EditorialBanner() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="text-[9px] tracking-[0.3em] uppercase text-gold-light font-light mb-5">
+          <p className="text-[9px] tracking-[0.3em] uppercase text-gold-light font-normal mb-5">
             The Heritage Edit · 2025
           </p>
-          <h2 className="font-serif text-[clamp(44px,6vw,80px)] font-light text-cream leading-[1] mb-7">
+          <h2 className="font-serif text-[clamp(44px,6vw,80px)] font-normal text-cream leading-[1] mb-7">
             Wear the <em className="italic">Stories</em><br />of Ceylon
           </h2>
-          <p className="text-[11px] tracking-[0.08em] text-cream/55 max-w-md mx-auto mb-10 leading-loose font-light">
+          <p className="text-[11px] tracking-[0.08em] text-cream/55 max-w-md mx-auto mb-10 leading-loose font-normal">
             Each thread is a conversation with the land. An heirloom, not just a garment.
             Explore our editorial on craft, identity, and slow fashion.
           </p>
           <Link
             href="#"
-            className="inline-flex items-center gap-4 text-[10px] tracking-[0.22em] uppercase text-cream border border-cream/40 px-9 py-4 hover:border-cream/90 hover:bg-cream/10 transition-all duration-500 group no-underline font-light"
+            className="inline-flex items-center gap-4 text-[10px] tracking-[0.22em] uppercase text-cream border border-cream/40 px-9 py-4 hover:border-cream/90 hover:bg-cream/10 transition-all duration-500 group no-underline font-normal"
           >
             Read the Story
             <span className="relative inline-block w-5 h-px bg-current transition-all duration-400 group-hover:w-8">

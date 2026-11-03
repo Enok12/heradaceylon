@@ -36,16 +36,16 @@ export default function BrandStory() {
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
         className="flex flex-col justify-center px-8 md:px-16 py-16 md:py-20"
       >
-        <p className="flex items-center gap-3 text-[9px] tracking-[0.28em] uppercase text-gold font-light mb-6">
+        <p className="flex items-center gap-3 text-[9px] tracking-[0.28em] uppercase text-gold font-normal mb-6">
           <span className="w-5 h-px bg-gold" />
           Our Heritage
         </p>
-        <h2 className="font-serif text-[clamp(36px,4vw,58px)] font-light text-cream leading-[1.05] mb-7">
+        <h2 className="font-serif text-[clamp(36px,4vw,58px)] font-normal text-cream leading-[1.05] mb-7">
           Born from the<br />
           <em className="italic text-gold-light">Island's</em><br />
           Memory
         </h2>
-        <p className="text-[12px] leading-loose text-cream/55 font-light mb-10 max-w-md tracking-[0.02em]">
+        <p className="text-[12px] leading-loose text-cream/55 font-normal mb-10 max-w-md tracking-[0.02em]">
           Herada Ceylon is rooted in the ancient textile traditions of Sri Lanka — handloom weaving
           techniques passed down through generations of artisan families. We collaborate directly
           with master weavers across the Kandy, Galle, and Jaffna districts, honouring their craft
@@ -53,7 +53,7 @@ export default function BrandStory() {
         </p>
         <Link
           href="#story"
-          className="inline-flex items-center gap-3 text-[9px] tracking-[0.2em] uppercase text-cream border border-cream/25 px-7 py-3.5 hover:border-cream/70 hover:bg-cream/5 transition-all duration-500 no-underline font-light self-start mb-14 group"
+          className="inline-flex items-center gap-3 text-[9px] tracking-[0.2em] uppercase text-cream border border-cream/25 px-7 py-3.5 hover:border-cream/70 hover:bg-cream/5 transition-all duration-500 no-underline font-normal self-start mb-14 group"
         >
           Discover Our Story
           <span className="group-hover:translate-x-1 transition-transform duration-300 text-sm">→</span>
@@ -63,8 +63,8 @@ export default function BrandStory() {
         <div className="flex gap-10 pt-10 border-t border-cream/10">
           {STATS.map(({ num, label }) => (
             <div key={label}>
-              <p className="font-serif text-[36px] font-light text-gold-light leading-none mb-2">{num}</p>
-              <p className="text-[9px] tracking-[0.2em] uppercase text-cream/35 font-light">{label}</p>
+              <p className="font-serif text-[36px] font-normal text-gold-light leading-none mb-2">{num}</p>
+              <p className="text-[9px] tracking-[0.2em] uppercase text-cream/35 font-normal">{label}</p>
             </div>
           ))}
         </div>

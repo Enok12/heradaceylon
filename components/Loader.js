@@ -41,7 +41,7 @@ export default function Loader() {
             className="flex flex-col items-center gap-5"
           >
             <span
-              className="font-serif text-[26px] font-light tracking-[0.32em] uppercase text-cream"
+              className="font-serif text-[26px] font-normal tracking-[0.32em] uppercase text-cream"
             >
               Herada Ceylon
             </span>
@@ -60,7 +60,7 @@ export default function Loader() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1], delay: 0.9 }}
-              className="text-[9px] tracking-[0.32em] uppercase text-cream/35 font-light"
+              className="text-[9px] tracking-[0.32em] uppercase text-cream/35 font-normal"
             >
               Sri Lanka · Est. 2018
             </motion.span>

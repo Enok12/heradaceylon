@@ -5,6 +5,7 @@
     "slug": "monsoon-drape",
     "price": 485,
     "category": "sarees",
+    "gender": "women",
     "subcategory": "handloom",
     "badge": "New",
     "images": [
@@ -15,6 +16,10 @@
     ],
     "hoverImage": "https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=700&q=80",
     "sizes": ["XS", "S", "M", "L", "XL"],
+    "stock": { "XS": 0, "S": 1, "M": 4, "L": 0, "XL": 6 },
+    "colors": [
+      { "name": "Purple", "image": "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=200&q=80" }
+    ],
     "description": "A flowing handloom saree woven by master craftspeople in the Kandy district. Each piece takes three days to complete on a traditional pit loom, creating an intricate texture that is both contemporary and deeply rooted in Sri Lankan heritage.",
     "fabric": "100% pure handloom cotton with natural dyes sourced from the Knuckles mountain range.",
     "shipping": "Complimentary shipping on all orders over USD 300. Standard delivery 7–14 business days. Express available.",
@@ -28,6 +33,7 @@
     "slug": "ivory-linen-set",
     "price": 310,
     "category": "contemporary",
+    "gender": "women",
     "subcategory": "sets",
     "badge": null,
     "images": [
@@ -50,6 +56,7 @@
     "slug": "cinnamon-pleats",
     "price": 395,
     "category": "sarees",
+    "gender": "women",
     "subcategory": "silk",
     "badge": null,
     "images": [
@@ -72,6 +79,7 @@
     "slug": "lotus-field",
     "price": 520,
     "category": "sarees",
+    "gender": "women",
     "subcategory": "silk",
     "badge": "New",
     "images": [
@@ -94,6 +102,7 @@
     "slug": "temple-weave",
     "price": 195,
     "category": "accessories",
+    "gender": "women",
     "subcategory": "dupattas",
     "badge": null,
     "images": [
@@ -115,6 +124,7 @@
     "slug": "dusk-linen-dress",
     "price": 440,
     "category": "contemporary",
+    "gender": "women",
     "subcategory": "dresses",
     "badge": "Limited",
     "images": [
@@ -137,6 +147,7 @@
     "slug": "saffron-trail",
     "price": 265,
     "category": "contemporary",
+    "gender": "women",
     "subcategory": "tops",
     "badge": null,
     "images": [
@@ -158,6 +169,7 @@
     "slug": "ceylon-garden",
     "price": 580,
     "category": "contemporary",
+    "gender": "women",
     "subcategory": "sets",
     "badge": "New",
     "images": [

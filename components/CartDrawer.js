@@ -41,7 +41,7 @@ export default function CartDrawer() {
           >
             {/* Header */}
             <div className="flex items-center justify-between px-8 py-6 border-b border-sand">
-              <span className="text-[10px] tracking-[0.22em] uppercase font-light text-charcoal">
+              <span className="text-[10px] tracking-[0.22em] uppercase font-normal text-charcoal">
                 Your Selection
                 <span className="ml-2 text-muted">({count})</span>
               </span>
@@ -59,7 +59,7 @@ export default function CartDrawer() {
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full gap-4">
                   <span className="text-4xl opacity-10">◻</span>
-                  <p className="text-[10px] tracking-[0.18em] uppercase text-muted font-light">
+                  <p className="text-[10px] tracking-[0.18em] uppercase text-muted font-normal">
                     Your cart is empty
                   </p>
                   <button
@@ -90,10 +90,10 @@ export default function CartDrawer() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-serif text-[16px] font-light text-charcoal mb-1 leading-snug">
+                        <p className="font-serif text-[16px] font-normal text-charcoal mb-1 leading-snug">
                           {item.product.name}
                         </p>
-                        <p className="text-[9px] tracking-[0.14em] uppercase text-muted mb-3 font-light">
+                        <p className="text-[9px] tracking-[0.14em] uppercase text-muted mb-3 font-normal">
                           Size: {item.size} · {item.product.category}
                         </p>
                         <div className="flex items-center justify-between">
@@ -118,7 +118,7 @@ export default function CartDrawer() {
                         </div>
                         <button
                           onClick={() => removeItem(item.key)}
-                          className="mt-2 text-[9px] tracking-[0.14em] uppercase text-muted hover:text-charcoal transition-colors duration-300 font-light"
+                          className="mt-2 text-[9px] tracking-[0.14em] uppercase text-muted hover:text-charcoal transition-colors duration-300 font-normal"
                         >
                           Remove
                         </button>
@@ -137,23 +137,23 @@ export default function CartDrawer() {
                 className="px-8 py-6 border-t border-sand bg-mist"
               >
                 <div className="flex justify-between items-baseline mb-4">
-                  <span className="text-[9px] tracking-[0.18em] uppercase text-muted font-light">Subtotal</span>
-                  <span className="font-serif text-[22px] font-light text-charcoal">
+                  <span className="text-[9px] tracking-[0.18em] uppercase text-muted font-normal">Subtotal</span>
+                  <span className="font-serif text-[22px] font-normal text-charcoal">
                     USD {total.toLocaleString()}
                   </span>
                 </div>
-                <p className="text-[10px] tracking-[0.04em] text-muted font-light leading-relaxed mb-5">
+                <p className="text-[10px] tracking-[0.04em] text-muted font-normal leading-relaxed mb-5">
                   Complimentary shipping on orders over USD 300. Duties and taxes calculated at checkout.
                 </p>
                 <button
                   onClick={handleCheckout}
-                  className="w-full py-4 bg-charcoal text-cream text-[10px] tracking-[0.24em] uppercase font-light hover:bg-espresso active:scale-[0.99] transition-all duration-400"
+                  className="w-full py-4 bg-charcoal text-cream text-[10px] tracking-[0.24em] uppercase font-normal hover:bg-espresso active:scale-[0.99] transition-all duration-400"
                 >
                   Proceed to Checkout
                 </button>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="w-full mt-3 py-3 border border-warm text-[9px] tracking-[0.2em] uppercase text-charcoal font-light hover:border-charcoal transition-all duration-300"
+                  className="w-full mt-3 py-3 border border-warm text-[9px] tracking-[0.2em] uppercase text-charcoal font-normal hover:border-charcoal transition-all duration-300"
                 >
                   Continue Shopping
                 </button>

@@ -8,10 +8,10 @@ import { useCart } from '@/context/CartContext'
 
 /* ─── tiny shared input style ─── */
 const inputCls =
-  'w-full border border-sand bg-cream px-4 py-3 text-[12px] tracking-[0.04em] text-charcoal font-light placeholder:text-muted/60 outline-none focus:border-charcoal transition-colors duration-300'
+  'w-full border border-sand bg-cream px-4 py-3 text-[12px] tracking-[0.04em] text-charcoal font-normal placeholder:text-muted/60 outline-none focus:border-charcoal transition-colors duration-300'
 
 const selectCls =
-  'w-full border border-sand bg-cream px-4 py-3 text-[12px] tracking-[0.04em] text-charcoal font-light outline-none focus:border-charcoal transition-colors duration-300 appearance-none cursor-pointer'
+  'w-full border border-sand bg-cream px-4 py-3 text-[12px] tracking-[0.04em] text-charcoal font-normal outline-none focus:border-charcoal transition-colors duration-300 appearance-none cursor-pointer'
 
 /* ─── step labels ─── */
 const STEPS = ['Bag', 'Information', 'Shipping', 'Payment']
@@ -26,7 +26,7 @@ function StepIndicator({ current }) {
           <div key={s} className="flex items-center">
             <div className="flex flex-col items-center gap-1">
               <div
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-light transition-all duration-500 ${
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-normal transition-all duration-500 ${
                   done
                     ? 'bg-gold text-cream'
                     : active
@@ -37,7 +37,7 @@ function StepIndicator({ current }) {
                 {done ? '✓' : i + 1}
               </div>
               <span
-                className={`text-[8px] tracking-[0.16em] uppercase font-light whitespace-nowrap ${
+                className={`text-[8px] tracking-[0.16em] uppercase font-normal whitespace-nowrap ${
                   active ? 'text-charcoal' : done ? 'text-gold' : 'text-muted'
                 }`}
               >
@@ -60,7 +60,7 @@ function StepIndicator({ current }) {
 
 function SectionTitle({ children }) {
   return (
-    <h2 className="font-serif text-[22px] font-light text-charcoal mb-6 flex items-center gap-3">
+    <h2 className="font-serif text-[22px] font-normal text-charcoal mb-6 flex items-center gap-3">
       {children}
     </h2>
   )
@@ -76,7 +76,7 @@ function FormRow({ children, cols = 2 }) {
 
 function FieldLabel({ children, required }) {
   return (
-    <label className="block text-[9px] tracking-[0.18em] uppercase text-muted font-light mb-2">
+    <label className="block text-[9px] tracking-[0.18em] uppercase text-muted font-normal mb-2">
       {children}
       {required && <span className="text-gold ml-0.5">*</span>}
     </label>
@@ -95,11 +95,11 @@ function OrderSummary({ items, total, shipping, collapsed, onToggle }) {
         onClick={onToggle}
         className="w-full flex items-center justify-between px-6 py-4 md:cursor-default"
       >
-        <span className="text-[10px] tracking-[0.2em] uppercase font-light text-charcoal">
+        <span className="text-[10px] tracking-[0.2em] uppercase font-normal text-charcoal">
           Order Summary
           <span className="ml-2 text-muted">({items.reduce((s, i) => s + i.qty, 0)} items)</span>
         </span>
-        <span className="text-[18px] font-light text-charcoal font-serif">
+        <span className="text-[18px] font-normal text-charcoal font-serif">
           USD {(grandTotal).toLocaleString()}
         </span>
       </button>
@@ -126,18 +126,18 @@ function OrderSummary({ items, total, shipping, collapsed, onToggle }) {
                         className="object-cover"
                         sizes="64px"
                       />
-                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-charcoal text-cream text-[9px] flex items-center justify-center font-light">
+                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-charcoal text-cream text-[9px] flex items-center justify-center font-normal">
                         {item.qty}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-serif text-[15px] font-light text-charcoal leading-snug mb-0.5">
+                      <p className="font-serif text-[15px] font-normal text-charcoal leading-snug mb-0.5">
                         {item.product.name}
                       </p>
-                      <p className="text-[9px] tracking-[0.14em] uppercase text-muted font-light mb-1">
+                      <p className="text-[9px] tracking-[0.14em] uppercase text-muted font-normal mb-1">
                         Size: {item.size}
                       </p>
-                      <p className="text-[12px] text-charcoal font-light">
+                      <p className="text-[12px] text-charcoal font-normal">
                         USD {(item.product.price * item.qty).toLocaleString()}
                       </p>
                     </div>
@@ -150,9 +150,9 @@ function OrderSummary({ items, total, shipping, collapsed, onToggle }) {
                 <input
                   type="text"
                   placeholder="Gift card or discount code"
-                  className="flex-1 px-4 py-2.5 bg-cream text-[11px] tracking-[0.04em] text-charcoal font-light placeholder:text-muted/50 outline-none"
+                  className="flex-1 px-4 py-2.5 bg-cream text-[11px] tracking-[0.04em] text-charcoal font-normal placeholder:text-muted/50 outline-none"
                 />
-                <button className="px-5 py-2.5 text-[9px] tracking-[0.18em] uppercase text-charcoal font-light border-l border-sand hover:bg-charcoal hover:text-cream transition-all duration-300 whitespace-nowrap">
+                <button className="px-5 py-2.5 text-[9px] tracking-[0.18em] uppercase text-charcoal font-normal border-l border-sand hover:bg-charcoal hover:text-cream transition-all duration-300 whitespace-nowrap">
                   Apply
                 </button>
               </div>
@@ -165,13 +165,13 @@ function OrderSummary({ items, total, shipping, collapsed, onToggle }) {
                   ['Estimated Tax', `USD ${tax.toLocaleString()}`],
                 ].map(([label, val]) => (
                   <div key={label} className="flex justify-between">
-                    <span className="text-[10px] tracking-[0.1em] uppercase text-muted font-light">{label}</span>
-                    <span className={`text-[11px] font-light ${val === 'Complimentary' ? 'text-gold' : 'text-charcoal'}`}>{val}</span>
+                    <span className="text-[10px] tracking-[0.1em] uppercase text-muted font-normal">{label}</span>
+                    <span className={`text-[11px] font-normal ${val === 'Complimentary' ? 'text-gold' : 'text-charcoal'}`}>{val}</span>
                   </div>
                 ))}
                 <div className="flex justify-between pt-3 border-t border-sand mt-3">
-                  <span className="text-[10px] tracking-[0.14em] uppercase text-charcoal font-light">Total</span>
-                  <span className="font-serif text-[20px] font-light text-charcoal">
+                  <span className="text-[10px] tracking-[0.14em] uppercase text-charcoal font-normal">Total</span>
+                  <span className="font-serif text-[20px] font-normal text-charcoal">
                     USD {grandTotal.toLocaleString()}
                   </span>
                 </div>
@@ -211,7 +211,7 @@ function InformationStep({ data, onChange, onNext }) {
       <div className="mb-10">
         <div className="flex justify-between items-baseline mb-5">
           <SectionTitle>Contact</SectionTitle>
-          <span className="text-[10px] tracking-[0.12em] text-muted font-light">
+          <span className="text-[10px] tracking-[0.12em] text-muted font-normal">
             Already have an account?{' '}
             <Link href="#" className="text-charcoal border-b border-charcoal/30 hover:border-charcoal no-underline transition-all duration-300">
               Log in
@@ -237,7 +237,7 @@ function InformationStep({ data, onChange, onNext }) {
           >
             {data.emailOffers && <span className="text-cream text-[10px] leading-none">✓</span>}
           </div>
-          <span className="text-[10px] tracking-[0.06em] text-muted font-light">
+          <span className="text-[10px] tracking-[0.06em] text-muted font-normal">
             Email me with new collections, events, and exclusive offers
           </span>
         </label>
@@ -350,7 +350,7 @@ function InformationStep({ data, onChange, onNext }) {
 
       <button
         onClick={() => validate() && onNext()}
-        className="w-full py-4 bg-charcoal text-cream text-[10px] tracking-[0.24em] uppercase font-light hover:bg-espresso active:scale-[0.99] transition-all duration-400"
+        className="w-full py-4 bg-charcoal text-cream text-[10px] tracking-[0.24em] uppercase font-normal hover:bg-espresso active:scale-[0.99] transition-all duration-400"
       >
         Continue to Shipping
       </button>
@@ -380,11 +380,11 @@ function ShippingStep({ info, method, onMethod, onNext, onBack }) {
           ['Ship to', `${info.address}${info.address2 ? ', ' + info.address2 : ''}, ${info.city}, ${info.country}`],
         ].map(([label, val]) => (
           <div key={label} className="flex justify-between items-start gap-4">
-            <span className="text-[9px] tracking-[0.16em] uppercase text-muted font-light w-16 flex-shrink-0 pt-0.5">{label}</span>
-            <span className="text-[11px] text-charcoal font-light flex-1 truncate">{val}</span>
+            <span className="text-[9px] tracking-[0.16em] uppercase text-muted font-normal w-16 flex-shrink-0 pt-0.5">{label}</span>
+            <span className="text-[11px] text-charcoal font-normal flex-1 truncate">{val}</span>
             <button
               onClick={onBack}
-              className="text-[9px] tracking-[0.12em] uppercase text-gold border-b border-gold/50 hover:border-gold font-light flex-shrink-0 transition-all duration-200"
+              className="text-[9px] tracking-[0.12em] uppercase text-gold border-b border-gold/50 hover:border-gold font-normal flex-shrink-0 transition-all duration-200"
             >
               Change
             </button>
@@ -412,11 +412,11 @@ function ShippingStep({ info, method, onMethod, onNext, onBack }) {
                 {method?.id === m.id && <div className="w-2 h-2 rounded-full bg-charcoal" />}
               </div>
               <div>
-                <p className="text-[11px] tracking-[0.06em] text-charcoal font-light">{m.label}</p>
-                <p className="text-[9px] tracking-[0.1em] uppercase text-muted font-light mt-0.5">{m.sub}</p>
+                <p className="text-[11px] tracking-[0.06em] text-charcoal font-normal">{m.label}</p>
+                <p className="text-[9px] tracking-[0.1em] uppercase text-muted font-normal mt-0.5">{m.sub}</p>
               </div>
             </div>
-            <span className={`text-[11px] font-light ${m.price === 0 ? 'text-gold' : 'text-charcoal'}`}>
+            <span className={`text-[11px] font-normal ${m.price === 0 ? 'text-gold' : 'text-charcoal'}`}>
               {m.note || `USD ${m.price}`}
             </span>
           </label>
@@ -426,7 +426,7 @@ function ShippingStep({ info, method, onMethod, onNext, onBack }) {
       <button
         onClick={onNext}
         disabled={!method}
-        className="w-full py-4 bg-charcoal text-cream text-[10px] tracking-[0.24em] uppercase font-light hover:bg-espresso active:scale-[0.99] transition-all duration-400 disabled:opacity-40 disabled:cursor-not-allowed"
+        className="w-full py-4 bg-charcoal text-cream text-[10px] tracking-[0.24em] uppercase font-normal hover:bg-espresso active:scale-[0.99] transition-all duration-400 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         Continue to Payment
       </button>
@@ -477,9 +477,9 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
           ['Shipping', method?.label],
         ].map(([label, val]) => (
           <div key={label} className="flex justify-between items-start gap-4">
-            <span className="text-[9px] tracking-[0.16em] uppercase text-muted font-light w-16 flex-shrink-0 pt-0.5">{label}</span>
-            <span className="text-[11px] text-charcoal font-light flex-1 truncate">{val}</span>
-            <button onClick={onBack} className="text-[9px] tracking-[0.12em] uppercase text-gold border-b border-gold/50 hover:border-gold font-light flex-shrink-0 transition-all duration-200">Change</button>
+            <span className="text-[9px] tracking-[0.16em] uppercase text-muted font-normal w-16 flex-shrink-0 pt-0.5">{label}</span>
+            <span className="text-[11px] text-charcoal font-normal flex-1 truncate">{val}</span>
+            <button onClick={onBack} className="text-[9px] tracking-[0.12em] uppercase text-gold border-b border-gold/50 hover:border-gold font-normal flex-shrink-0 transition-all duration-200">Change</button>
           </div>
         ))}
       </div>
@@ -496,7 +496,7 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
           <button
             key={pm.id}
             onClick={() => setPayMethod(pm.id)}
-            className={`px-5 py-2.5 text-[9px] tracking-[0.16em] uppercase font-light border transition-all duration-300 ${
+            className={`px-5 py-2.5 text-[9px] tracking-[0.16em] uppercase font-normal border transition-all duration-300 ${
               payMethod === pm.id
                 ? 'bg-charcoal text-cream border-charcoal'
                 : 'text-muted border-sand hover:border-charcoal hover:text-charcoal'
@@ -526,7 +526,7 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
                   onChange={e => setCard(c => ({ ...c, num: formatCard(e.target.value) }))}
                   placeholder="Card number"
                   maxLength={19}
-                  className="w-full px-4 py-3.5 text-[13px] tracking-[0.12em] text-charcoal font-light placeholder:text-muted/50 outline-none bg-transparent"
+                  className="w-full px-4 py-3.5 text-[13px] tracking-[0.12em] text-charcoal font-normal placeholder:text-muted/50 outline-none bg-transparent"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[16px] opacity-30">
                   {card.num.startsWith('4') ? '💳' : card.num.startsWith('5') ? '💳' : '💳'}
@@ -538,7 +538,7 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
                   value={card.name}
                   onChange={e => setCard(c => ({ ...c, name: e.target.value }))}
                   placeholder="Name on card"
-                  className="w-full text-[13px] tracking-[0.06em] text-charcoal font-light placeholder:text-muted/50 outline-none bg-transparent"
+                  className="w-full text-[13px] tracking-[0.06em] text-charcoal font-normal placeholder:text-muted/50 outline-none bg-transparent"
                 />
               </div>
               <div className="flex">
@@ -549,7 +549,7 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
                     onChange={e => setCard(c => ({ ...c, exp: formatExp(e.target.value) }))}
                     placeholder="MM / YY"
                     maxLength={5}
-                    className="w-full text-[13px] tracking-[0.08em] text-charcoal font-light placeholder:text-muted/50 outline-none bg-transparent"
+                    className="w-full text-[13px] tracking-[0.08em] text-charcoal font-normal placeholder:text-muted/50 outline-none bg-transparent"
                   />
                 </div>
                 <div className={`flex-1 px-4 py-3.5 ${errors.cvc ? 'bg-red-50' : ''}`}>
@@ -559,12 +559,12 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
                     onChange={e => setCard(c => ({ ...c, cvc: e.target.value.replace(/\D/g, '').slice(0, 4) }))}
                     placeholder="CVC"
                     maxLength={4}
-                    className="w-full text-[13px] tracking-[0.08em] text-charcoal font-light placeholder:text-muted/50 outline-none bg-transparent"
+                    className="w-full text-[13px] tracking-[0.08em] text-charcoal font-normal placeholder:text-muted/50 outline-none bg-transparent"
                   />
                 </div>
               </div>
             </div>
-            <p className="text-[9px] tracking-[0.08em] text-muted font-light mt-3 flex items-center gap-2">
+            <p className="text-[9px] tracking-[0.08em] text-muted font-normal mt-3 flex items-center gap-2">
               <span className="text-[11px]">🔒</span>
               All transactions are secure and encrypted by SSL.
             </p>
@@ -574,7 +574,7 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
         {payMethod === 'paypal' && (
           <motion.div key="paypal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="mb-8 border border-sand p-6 text-center bg-[#ffc439]/10">
-            <p className="text-[11px] tracking-[0.06em] text-charcoal font-light mb-4">
+            <p className="text-[11px] tracking-[0.06em] text-charcoal font-normal mb-4">
               You will be redirected to PayPal to complete your purchase securely.
             </p>
             <div className="inline-block text-[24px] font-bold text-[#003087]">Pay<span className="text-[#009cde]">Pal</span></div>
@@ -584,7 +584,7 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
         {payMethod === 'bank' && (
           <motion.div key="bank" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="mb-8 border border-sand p-6 bg-linen/60">
-            <p className="text-[11px] tracking-[0.06em] text-charcoal font-light leading-relaxed">
+            <p className="text-[11px] tracking-[0.06em] text-charcoal font-normal leading-relaxed">
               Bank transfer details will be emailed after order placement. Your order will be held for 48 hours pending payment confirmation.
             </p>
           </motion.div>
@@ -598,7 +598,7 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
           <div className="w-4 h-4 border border-charcoal flex items-center justify-center flex-shrink-0">
             <span className="text-charcoal text-[10px]">✓</span>
           </div>
-          <span className="text-[10px] tracking-[0.06em] text-charcoal font-light">
+          <span className="text-[10px] tracking-[0.06em] text-charcoal font-normal">
             Same as shipping address
           </span>
         </label>
@@ -607,8 +607,8 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
       {/* Grand total + Place order */}
       <div className="border-t border-sand pt-6 mb-6">
         <div className="flex justify-between items-baseline mb-5">
-          <span className="text-[10px] tracking-[0.18em] uppercase text-muted font-light">Order Total</span>
-          <span className="font-serif text-[24px] font-light text-charcoal">
+          <span className="text-[10px] tracking-[0.18em] uppercase text-muted font-normal">Order Total</span>
+          <span className="font-serif text-[24px] font-normal text-charcoal">
             USD {grand.toLocaleString()}
           </span>
         </div>
@@ -618,7 +618,7 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
         onClick={() => validate() && onPlace()}
         whileTap={{ scale: 0.99 }}
         disabled={placing}
-        className="w-full py-4 bg-charcoal text-cream text-[10px] tracking-[0.26em] uppercase font-light hover:bg-espresso transition-all duration-400 disabled:opacity-60 relative overflow-hidden"
+        className="w-full py-4 bg-charcoal text-cream text-[10px] tracking-[0.26em] uppercase font-normal hover:bg-espresso transition-all duration-400 disabled:opacity-60 relative overflow-hidden"
       >
         {placing ? (
           <span className="flex items-center justify-center gap-3">
@@ -634,7 +634,7 @@ function PaymentStep({ info, method, total, onPlace, onBack, placing }) {
         )}
       </motion.button>
 
-      <p className="text-[9px] tracking-[0.06em] text-muted font-light text-center mt-4 leading-relaxed">
+      <p className="text-[9px] tracking-[0.06em] text-muted font-normal text-center mt-4 leading-relaxed">
         By placing your order you agree to our{' '}
         <Link href="#" className="text-charcoal border-b border-charcoal/30 no-underline hover:border-charcoal transition-all duration-200">
           Terms of Service
@@ -686,7 +686,7 @@ export default function CheckoutPage() {
       <div className="max-w-[1100px] mx-auto px-4 py-10 md:py-16">
         {/* Logo */}
         <div className="text-center mb-10">
-          <Link href="/" className="font-serif text-[20px] font-light tracking-[0.22em] uppercase text-charcoal no-underline">
+          <Link href="/" className="font-serif text-[20px] font-normal tracking-[0.22em] uppercase text-charcoal no-underline">
             Herada Ceylon
           </Link>
         </div>
@@ -751,7 +751,7 @@ export default function CheckoutPage() {
               ].map(b => (
                 <div key={b.label} className="flex flex-col items-center gap-2 py-4 border border-sand bg-linen/40">
                   <span className="text-lg opacity-50">{b.icon}</span>
-                  <span className="text-[8px] tracking-[0.16em] uppercase text-muted font-light text-center">{b.label}</span>
+                  <span className="text-[8px] tracking-[0.16em] uppercase text-muted font-normal text-center">{b.label}</span>
                 </div>
               ))}
             </div>

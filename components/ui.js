@@ -40,7 +40,7 @@ export function StaggerSection({ children, className = '' }) {
 
 export function SectionLabel({ children }) {
   return (
-    <p className="flex items-center gap-3 text-[9px] tracking-[0.28em] uppercase text-gold font-light mb-4">
+    <p className="flex items-center gap-3 text-[9px] tracking-[0.28em] uppercase text-gold font-normal mb-4">
       <span className="w-6 h-px bg-gold inline-block" />
       {children}
     </p>
@@ -49,7 +49,7 @@ export function SectionLabel({ children }) {
 
 export function SectionHeading({ children, className = '', light = false }) {
   return (
-    <h2 className={`font-serif font-light leading-[1.05] tracking-[-0.01em] ${light ? 'text-cream' : 'text-charcoal'} ${className}`}>
+    <h2 className={`font-serif font-normal leading-[1.05] tracking-[-0.01em] ${light ? 'text-cream' : 'text-charcoal'} ${className}`}>
       {children}
     </h2>
   )

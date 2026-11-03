@@ -49,7 +49,7 @@ export default function ProductCard({ product, priority = false }) {
 
           {/* Badge */}
           {product.badge && (
-            <span className="absolute top-4 left-4 text-[8px] tracking-[0.2em] uppercase bg-charcoal text-cream px-3 py-1 font-light z-10">
+            <span className="absolute top-4 left-4 text-[8px] tracking-[0.2em] uppercase bg-charcoal text-cream px-3 py-1 font-normal z-10">
               {product.badge}
             </span>
           )}
@@ -59,7 +59,7 @@ export default function ProductCard({ product, priority = false }) {
             onClick={handleAdd}
             initial={{ opacity: 0, y: 8 }}
             whileHover={{ opacity: 1, y: 0 }}
-            className="absolute bottom-4 left-4 right-4 py-3 bg-cream/95 text-charcoal text-[9px] tracking-[0.22em] uppercase font-light
+            className="absolute bottom-4 left-4 right-4 py-3 bg-cream/95 text-charcoal text-[9px] tracking-[0.22em] uppercase font-normal
                        opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
                        hover:bg-charcoal hover:text-cream border border-transparent hover:border-charcoal"
           >
@@ -69,13 +69,13 @@ export default function ProductCard({ product, priority = false }) {
 
         {/* Info */}
         <div className="space-y-1">
-          <p className="text-[9px] tracking-[0.18em] uppercase text-muted font-light">
+          <p className="text-[9px] tracking-[0.18em] uppercase text-muted font-normal">
             {product.subcategory}
           </p>
-          <h3 className="font-serif text-[18px] font-light text-charcoal leading-snug">
+          <h3 className="font-serif text-[18px] font-normal text-charcoal leading-snug">
             {product.name}
           </h3>
-          <p className="text-[12px] tracking-[0.08em] text-charcoal font-light">
+          <p className="text-[12px] tracking-[0.08em] text-charcoal font-normal">
             USD {product.price.toLocaleString()}
           </p>
         </div>

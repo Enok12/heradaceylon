@@ -99,7 +99,7 @@ export default function ConfirmationPage() {
 
         {/* Logo */}
         <div className="text-center mb-16">
-          <Link href="/" className="font-serif text-[20px] font-light tracking-[0.22em] uppercase text-charcoal no-underline">
+          <Link href="/" className="font-serif text-[20px] font-normal tracking-[0.22em] uppercase text-charcoal no-underline">
             Herada Ceylon
           </Link>
         </div>
@@ -122,22 +122,22 @@ export default function ConfirmationPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="text-[9px] tracking-[0.28em] uppercase text-gold font-light mb-3 flex items-center justify-center gap-3">
+            <p className="text-[9px] tracking-[0.28em] uppercase text-gold font-normal mb-3 flex items-center justify-center gap-3">
               <span className="w-5 h-px bg-gold" />
               Order Confirmed
               <span className="w-5 h-px bg-gold" />
             </p>
-            <h1 className="font-serif text-[clamp(36px,5vw,52px)] font-light text-charcoal leading-[1.05] mb-4">
+            <h1 className="font-serif text-[clamp(36px,5vw,52px)] font-normal text-charcoal leading-[1.05] mb-4">
               Thank you,<br />
               <em className="italic text-gold">your order is placed</em>
             </h1>
-            <p className="text-[12px] tracking-[0.06em] text-muted font-light leading-loose max-w-md mx-auto mb-6">
+            <p className="text-[12px] tracking-[0.06em] text-muted font-normal leading-loose max-w-md mx-auto mb-6">
               Your piece will be carefully wrapped and dispatched from our atelier in Colombo.
               A confirmation has been sent to your email.
             </p>
             <div className="inline-flex items-center gap-3 border border-sand bg-linen px-6 py-3">
-              <span className="text-[9px] tracking-[0.18em] uppercase text-muted font-light">Order</span>
-              <span className="font-serif text-[18px] font-light text-charcoal tracking-wider">{orderNum}</span>
+              <span className="text-[9px] tracking-[0.18em] uppercase text-muted font-normal">Order</span>
+              <span className="font-serif text-[18px] font-normal text-charcoal tracking-wider">{orderNum}</span>
             </div>
           </motion.div>
         </motion.div>
@@ -149,7 +149,7 @@ export default function ConfirmationPage() {
           transition={{ delay: 0.8, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="mb-14"
         >
-          <p className="text-[9px] tracking-[0.24em] uppercase text-muted font-light text-center mb-8">
+          <p className="text-[9px] tracking-[0.24em] uppercase text-muted font-normal text-center mb-8">
             What happens next
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-sand">
@@ -162,8 +162,8 @@ export default function ConfirmationPage() {
                 className="bg-cream px-6 py-7 text-center"
               >
                 <div className="text-2xl mb-4 opacity-60">{step.icon}</div>
-                <p className="text-[10px] tracking-[0.16em] uppercase text-charcoal font-light mb-2">{step.title}</p>
-                <p className="text-[10px] tracking-[0.04em] text-muted font-light leading-relaxed">{step.desc}</p>
+                <p className="text-[10px] tracking-[0.16em] uppercase text-charcoal font-normal mb-2">{step.title}</p>
+                <p className="text-[10px] tracking-[0.04em] text-muted font-normal leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -178,19 +178,19 @@ export default function ConfirmationPage() {
             className="border border-sand mb-14"
           >
             <div className="flex justify-between items-center px-6 py-4 border-b border-sand">
-              <span className="text-[10px] tracking-[0.2em] uppercase text-charcoal font-light">Your Items</span>
-              <span className="font-serif text-[18px] font-light text-charcoal">USD {confirmedTotal.toLocaleString()}</span>
+              <span className="text-[10px] tracking-[0.2em] uppercase text-charcoal font-normal">Your Items</span>
+              <span className="font-serif text-[18px] font-normal text-charcoal">USD {confirmedTotal.toLocaleString()}</span>
             </div>
             <div className="px-6 py-5 space-y-4">
               {confirmedItems.map(item => (
                 <div key={item.key} className="flex justify-between items-center">
                   <div>
-                    <p className="font-serif text-[15px] font-light text-charcoal">{item.product.name}</p>
-                    <p className="text-[9px] tracking-[0.14em] uppercase text-muted font-light">
+                    <p className="font-serif text-[15px] font-normal text-charcoal">{item.product.name}</p>
+                    <p className="text-[9px] tracking-[0.14em] uppercase text-muted font-normal">
                       {item.product.subcategory} · Size {item.size} · Qty {item.qty}
                     </p>
                   </div>
-                  <p className="text-[12px] text-charcoal font-light">
+                  <p className="text-[12px] text-charcoal font-normal">
                     USD {(item.product.price * item.qty).toLocaleString()}
                   </p>
                 </div>
@@ -208,13 +208,13 @@ export default function ConfirmationPage() {
         >
           <Link
             href="/"
-            className="flex-1 py-4 bg-charcoal text-cream text-[10px] tracking-[0.24em] uppercase font-light text-center hover:bg-espresso transition-all duration-400 no-underline"
+            className="flex-1 py-4 bg-charcoal text-cream text-[10px] tracking-[0.24em] uppercase font-normal text-center hover:bg-espresso transition-all duration-400 no-underline"
           >
             Continue Shopping
           </Link>
           <Link
             href="/collections"
-            className="flex-1 py-4 border border-warm text-charcoal text-[10px] tracking-[0.24em] uppercase font-light text-center hover:border-charcoal transition-all duration-400 no-underline"
+            className="flex-1 py-4 border border-warm text-charcoal text-[10px] tracking-[0.24em] uppercase font-normal text-center hover:border-charcoal transition-all duration-400 no-underline"
           >
             View Collections
           </Link>
@@ -222,10 +222,10 @@ export default function ConfirmationPage() {
 
         {/* Brand line */}
         <div className="text-center mt-16 pt-10 border-t border-sand">
-          <p className="font-serif text-[14px] font-light text-muted italic">
+          <p className="font-serif text-[14px] font-normal text-muted italic">
             "Each thread is a conversation with the land."
           </p>
-          <p className="text-[9px] tracking-[0.24ex] uppercase text-muted/50 font-light mt-2">
+          <p className="text-[9px] tracking-[0.24ex] uppercase text-muted/50 font-normal mt-2">
             Herada Ceylon · Colombo, Sri Lanka
           </p>
         </div>

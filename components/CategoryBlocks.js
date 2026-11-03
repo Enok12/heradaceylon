@@ -45,13 +45,13 @@ export default function CategoryBlocks() {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-espresso/10 to-espresso/50 group-hover:to-espresso/65 transition-all duration-700" />
 
           <div className="absolute bottom-0 left-0 right-0 p-10 md:p-12">
-            <p className="text-[9px] tracking-[0.28em] uppercase text-cream/55 font-light mb-3">{cat.label}</p>
-            <h3 className="font-serif text-[38px] md:text-[48px] font-light text-cream leading-[1] mb-6 whitespace-pre-line">
+            <p className="text-[9px] tracking-[0.28em] uppercase text-cream/55 font-normal mb-3">{cat.label}</p>
+            <h3 className="font-serif text-[38px] md:text-[48px] font-normal text-cream leading-[1] mb-6 whitespace-pre-line">
               {cat.title}
             </h3>
             <Link
               href={cat.href}
-              className="inline-flex items-center gap-3 text-[9px] tracking-[0.22em] uppercase text-cream/75 no-underline font-light opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-cream"
+              className="inline-flex items-center gap-3 text-[9px] tracking-[0.22em] uppercase text-cream/75 no-underline font-normal opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-cream"
             >
               {cat.cta}
               <span className="text-sm group-hover:translate-x-1 transition-transform duration-300">→</span>

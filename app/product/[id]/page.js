@@ -17,7 +17,19 @@ export default function ProductPage({ params }) {
   if (!product) notFound()
 
   const { addItem } = useCart()
-  const [selectedSize, setSelectedSize] = useState(product.sizes[0])
+
+  // Optional per-size stock ({ S: 0, M: 1, ... }): 0 = sold out; a size missing from the
+  // map (or no map at all) is treated as available with no count shown
+  const stockFor = (size) => product.stock?.[size]
+  const isSoldOut = (size) => stockFor(size) === 0
+  const [selectedSize, setSelectedSize] = useState(
+    product.sizes.find(s => !isSoldOut(s)) ?? product.sizes[0]
+  )
+  const [selectedColor, setSelectedColor] = useState(0)
+  const [qty, setQty] = useState(1)
+  const sizeStock = stockFor(selectedSize)
+  const maxQty = sizeStock ?? 10
+  const lowStock = sizeStock > 0 && sizeStock <= 3
   const [added, setAdded] = useState(false)
   const [showStickyBar, setShowStickyBar] = useState(false)
   const { hidden: navHidden } = useNavScroll()
@@ -39,8 +51,14 @@ export default function ProductPage({ params }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const selectSize = (size) => {
+    setSelectedSize(size)
+    setQty(1)
+  }
+
   const handleAdd = () => {
-    addItem(product, selectedSize)
+    if (isSoldOut(selectedSize)) return
+    addItem(product, selectedSize, qty)
     setAdded(true)
     setTimeout(() => setAdded(false), 1800)
   }
@@ -97,7 +115,7 @@ export default function ProductPage({ params }) {
       </AnimatePresence>
 
       {/* Breadcrumb */}
-      <div className="px-8 md:px-16 py-5 flex items-center gap-3 text-[9px] tracking-[0.16em] uppercase text-muted font-light">
+      <div className="px-8 md:px-16 py-5 flex items-center gap-3 text-[9px] tracking-[0.16em] uppercase text-muted font-normal">
         <Link href="/" className="hover:text-charcoal transition-colors duration-200 no-underline">Home</Link>
         <span className="opacity-30">/</span>
         <Link href="/collections" className="hover:text-charcoal transition-colors duration-200 no-underline">Collections</Link>
@@ -122,57 +140,108 @@ export default function ProductPage({ params }) {
           // a long info column (open accordion) scrolls inside itself instead of the page
           className="md:sticky md:top-[96px] md:self-start md:max-h-[calc(100vh-112px)] md:overflow-y-auto no-scrollbar py-2"
         >
-          {/* Category + Badge */}
-          <div className="flex items-center gap-3 mb-4">
-            <p className="text-[9px] tracking-[0.2em] uppercase text-muted font-light">{product.subcategory}</p>
+          {/* Name */}
+          <div className="flex items-start gap-3 mb-2">
+            <h1 className="text-[clamp(28px,3vw,36px)] font-normal text-charcoal leading-tight tracking-[0.01em]">
+              {product.name}
+            </h1>
             {product.badge && (
-              <span className="text-[8px] tracking-[0.18em] uppercase bg-charcoal text-cream px-2.5 py-1 font-light">
+              <span className="mt-2.5 text-[10px] tracking-[0.16em] uppercase bg-charcoal text-white px-2.5 py-1 rounded-full font-medium whitespace-nowrap">
                 {product.badge}
               </span>
             )}
           </div>
 
-          {/* Name */}
-          <h1 className="font-serif text-[clamp(36px,4vw,52px)] font-light text-charcoal leading-[1.05] mb-3">
-            {product.name}
-          </h1>
-
-          {/* Price */}
-          <p className="text-[18px] tracking-[0.06em] text-charcoal font-light mb-8">
-            USD {product.price.toLocaleString()}
+          {/* SKU */}
+          <p className="text-[13px] tracking-[0.06em] text-charcoal font-medium uppercase mb-6">
+            {product.sku ?? product.id}
           </p>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            {product.tags.map(tag => (
-              <span key={tag} className="text-[8px] tracking-[0.16em] uppercase text-muted font-light border border-sand px-3 py-1">
-                {tag}
-              </span>
-            ))}
+          {/* Price */}
+          <p className="text-[32px] font-semibold text-charcoal tracking-[0.01em] mb-8">
+            USD {product.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+          </p>
+
+          {/* Color */}
+          {product.colors?.length > 0 && (
+            <div className="mb-7">
+              <p className="text-[13px] tracking-[0.12em] uppercase text-charcoal font-normal mb-3">
+                Select Color : <span className="font-medium">{product.colors[selectedColor].name}</span>
+              </p>
+              <div className="flex gap-3">
+                {product.colors.map((color, i) => (
+                  <button
+                    key={color.name}
+                    onClick={() => setSelectedColor(i)}
+                    aria-label={color.name}
+                    title={color.name}
+                    className={`relative w-9 h-9 rounded-full overflow-hidden transition-all duration-200 ${
+                      selectedColor === i ? 'ring-1 ring-charcoal ring-offset-2' : 'ring-1 ring-sand hover:ring-charcoal/50'
+                    }`}
+                    style={color.hex ? { backgroundColor: color.hex } : undefined}
+                  >
+                    {color.image && <Image src={color.image} alt="" fill className="object-cover" sizes="36px" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Size */}
+          <div className="mb-7">
+            <p className="text-[13px] tracking-[0.12em] uppercase text-charcoal font-normal mb-3">Select Size</p>
+            <div className="flex flex-wrap gap-3">
+              {product.sizes.map(size => {
+                const soldOut = isSoldOut(size)
+                return (
+                  <button
+                    key={size}
+                    onClick={() => !soldOut && selectSize(size)}
+                    disabled={soldOut}
+                    aria-label={soldOut ? `${size} (sold out)` : size}
+                    className={`relative min-w-[88px] h-11 px-4 rounded-lg overflow-hidden text-[15px] uppercase border transition-all duration-200 ${
+                      soldOut
+                        ? 'border-sand text-charcoal/30 cursor-not-allowed'
+                        : selectedSize === size
+                          ? 'border-charcoal bg-charcoal text-white font-medium'
+                          : 'border-charcoal/30 text-charcoal hover:border-charcoal'
+                    }`}
+                  >
+                    {size}
+                    {soldOut && (
+                      // Diagonal strike for sold-out sizes
+                      <span className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_top_right,transparent_calc(50%-0.5px),rgba(26,26,26,0.25)_50%,transparent_calc(50%+0.5px))]" />
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+            <button className="mt-4 text-[13px] text-charcoal font-medium underline underline-offset-4 hover:text-gold transition-colors duration-200">
+              Size Chart
+            </button>
           </div>
 
-          {/* Size Selector */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-3">
-              <p className="text-[9px] tracking-[0.2em] uppercase text-charcoal font-light">Size</p>
-              <button className="text-[9px] tracking-[0.14em] uppercase text-muted border-b border-muted font-light hover:text-gold hover:border-gold transition-colors duration-300">
-                Size Guide
+          {/* Quantity */}
+          <div className="mb-7">
+            <p className="text-[13px] tracking-[0.12em] uppercase text-charcoal font-normal mb-3">Quantity</p>
+            <div className="inline-flex items-center h-11 rounded-full border border-charcoal/30">
+              <button
+                onClick={() => setQty(q => Math.max(1, q - 1))}
+                disabled={qty <= 1}
+                aria-label="Decrease quantity"
+                className="w-12 h-full flex items-center justify-center text-[20px] text-charcoal disabled:text-charcoal/30"
+              >
+                −
               </button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {product.sizes.map(size => (
-                <button
-                  key={size}
-                  onClick={() => setSelectedSize(size)}
-                  className={`min-w-[48px] h-10 px-3 text-[10px] tracking-[0.14em] uppercase font-light border transition-all duration-300 ${
-                    selectedSize === size
-                      ? 'border-charcoal bg-charcoal text-cream'
-                      : 'border-sand text-charcoal hover:border-charcoal'
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
+              <span className="w-8 text-center text-[15px] text-charcoal font-medium tabular-nums">{qty}</span>
+              <button
+                onClick={() => setQty(q => Math.min(maxQty, q + 1))}
+                disabled={qty >= maxQty}
+                aria-label="Increase quantity"
+                className="w-12 h-full flex items-center justify-center text-[20px] text-charcoal disabled:text-charcoal/30"
+              >
+                +
+              </button>
             </div>
           </div>
 
@@ -181,25 +250,38 @@ export default function ProductPage({ params }) {
             <motion.button
               onClick={handleAdd}
               whileTap={{ scale: 0.98 }}
-              className={`w-full py-4 text-[10px] tracking-[0.24em] uppercase font-light transition-all duration-500 ${
-                added
-                  ? 'bg-gold text-cream border border-gold'
-                  : 'bg-charcoal text-cream hover:bg-espresso'
+              className={`w-full h-14 rounded-full text-[15px] tracking-[0.04em] uppercase font-medium transition-all duration-300 ${
+                added ? 'bg-gold text-white' : 'bg-black text-white hover:bg-espresso'
               }`}
             >
-              {added ? '✓ Added to Bag' : `Add to Bag — USD ${product.price.toLocaleString()}`}
+              {added ? '✓ Added to Cart' : 'Add to Cart'}
             </motion.button>
-            <button className="w-full py-4 text-[10px] tracking-[0.24em] uppercase font-light border border-warm text-charcoal hover:border-charcoal transition-all duration-300">
+
+            {lowStock && (
+              <div className="pt-1">
+                <p className="flex items-center gap-2 text-[15px] text-[#E5432F] font-medium">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rotate-45 rounded-[4px] bg-[#E5432F]">
+                    <span className="-rotate-45 text-white text-[12px] font-bold leading-none">!</span>
+                  </span>
+                  Only {sizeStock} {sizeStock === 1 ? 'item' : 'items'} left in stock!
+                </p>
+                <p className="mt-2 text-[14px] text-charcoal font-medium">
+                  Going Fast – Secure Yours Before It&rsquo;s Gone!
+                </p>
+              </div>
+            )}
+
+            <button className="w-full h-12 rounded-full text-[13px] tracking-[0.08em] uppercase font-medium border border-charcoal/30 text-charcoal hover:border-charcoal transition-all duration-300">
               Save to Wishlist
             </button>
           </div>
 
           {/* Badges row */}
-          <div className="flex gap-5 mb-10 pb-10 border-b border-sand">
+          <div className="flex flex-wrap gap-x-5 gap-y-2 mb-10 pb-10 border-b border-sand">
             {['Handwoven', 'Free Shipping +300', 'Easy Returns'].map(b => (
               <div key={b} className="flex items-center gap-2">
                 <span className="w-1 h-1 rounded-full bg-gold" />
-                <span className="text-[8px] tracking-[0.14em] uppercase text-muted font-light whitespace-nowrap">{b}</span>
+                <span className="text-[11px] tracking-[0.12em] uppercase text-charcoal/70 font-medium whitespace-nowrap">{b}</span>
               </div>
             ))}
           </div>
@@ -213,10 +295,10 @@ export default function ProductPage({ params }) {
       {related.length > 0 && (
         <div className="border-t border-sand py-20 bg-linen">
           <div className="px-8 md:px-16 mb-12">
-            <p className="text-[9px] tracking-[0.28ex] uppercase text-gold font-light mb-3 flex items-center gap-3">
+            <p className="text-[9px] tracking-[0.28ex] uppercase text-gold font-normal mb-3 flex items-center gap-3">
               <span className="w-5 h-px bg-gold" />Continue
             </p>
-            <h2 className="font-serif text-[clamp(28px,3.5vw,44px)] font-light text-charcoal">
+            <h2 className="font-serif text-[clamp(28px,3.5vw,44px)] font-normal text-charcoal">
               You May Also <em className="italic">Like</em>
             </h2>
           </div>
