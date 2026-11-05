@@ -1,41 +1,32 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
 const EASE = [0.16, 1, 0.3, 1]
-const SERIF = { fontFamily: "'Cormorant Garamond', Georgia, serif" }
+const LOGO = '/images/logo/embossed-symbol.png'
 
-// One word, revealed letter by letter through a mask. `from` sets the travel direction:
-// the top word rises from below, the bottom word drops from above, so they meet at the rule.
-function MaskedWord({ word, from, start }) {
-  return (
-    <span className="flex justify-center" aria-hidden="true">
-      {word.split('').map((char, i) => (
-        <span key={i} className="inline-block overflow-hidden pb-[0.06em]">
-          <motion.span
-            className="inline-block"
-            initial={{ y: from === 'below' ? '110%' : '-110%', opacity: 0, filter: 'blur(8px)' }}
-            animate={start ? { y: '0%', opacity: 1, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.1, ease: EASE, delay: i * 0.07 }}
-          >
-            {char}
-          </motion.span>
-        </span>
-      ))}
-    </span>
-  )
+// Shapes the sheen to the seal's own lines, using the logo's transparency
+const LOGO_MASK = {
+  WebkitMaskImage: `url(${LOGO})`,
+  maskImage: `url(${LOGO})`,
+  WebkitMaskSize: '100% 100%',
+  maskSize: '100% 100%',
 }
 
 export default function LogoIntro() {
   const ref = useRef(null)
   const [start, setStart] = useState(false)
 
-  // The site Loader covers the first visit of a session for ~2.4s; wait for it to clear
+  // The site Loader covers every full page load (~2.4s on a first visit, ~1s after that);
+  // hold the entrance until it has left the page, so the seal isn't revealed behind it
   useEffect(() => {
-    let seen = true
-    try { seen = !!sessionStorage.getItem('hc-loaded') } catch {}
-    const t = setTimeout(() => setStart(true), seen ? 150 : 2900)
-    return () => clearTimeout(t)
+    const t = setInterval(() => {
+      if (document.querySelector('[data-loader]')) return
+      clearInterval(t)
+      setStart(true)
+    }, 50)
+    return () => clearInterval(t)
   }, [])
 
   // Logo drifts up and fades as the visitor scrolls on to the categories
@@ -50,32 +41,29 @@ export default function LogoIntro() {
       <motion.div style={{ y, opacity }} className="relative flex-1 flex flex-col items-center justify-center text-center text-charcoal px-6">
         <h1 className="sr-only">Herada Ceylon</h1>
 
-        <div style={SERIF} className="text-[clamp(56px,min(15vw,19vh),220px)] leading-[0.9] font-medium tracking-[0.04em]">
-          <MaskedWord word="HERADA" from="below" start={start} />
-        </div>
+        {/* Sized by the smaller of screen height and width, so the seal fits any screen */}
+        <div className="relative w-[min(60svh,84vw)] aspect-[635/641]">
+          {/* Entrance: the seal opens outward from its centre, turning into place and sharpening */}
+          <motion.div
+            className="absolute inset-0"
+            initial={{ clipPath: 'circle(0% at 50% 50%)', rotate: -24, opacity: 0, filter: 'blur(10px)' }}
+            animate={start ? { clipPath: 'circle(75% at 50% 50%)', rotate: 0, opacity: 1, filter: 'blur(0px)' } : {}}
+            transition={{ duration: 1.8, ease: EASE }}
+          >
+            <Image src={LOGO} alt="" fill priority sizes="(max-width: 768px) 84vw, 60vh" className="object-contain" />
 
-        {/* Gold rule drawn outward from the centre between the two words */}
-        <div className="relative h-px my-[clamp(10px,2vw,22px)] mx-auto w-full max-w-[min(90vw,1100px)]">
-          <motion.span
-            className="absolute inset-0 bg-gold origin-center"
-            initial={{ scaleX: 0 }}
-            animate={start ? { scaleX: 1 } : {}}
-            transition={{ duration: 1.4, ease: EASE, delay: 0.35 }}
-          />
+            {/* Then a band of light sweeps once across the gold. Inside the animated layer, so
+                it turns with the seal and can't show beyond what the circle has revealed. */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none" style={LOGO_MASK}>
+              <motion.span
+                className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-[#FFE9A8] to-transparent"
+                initial={{ x: '-120%' }}
+                animate={start ? { x: '320%' } : {}}
+                transition={{ duration: 1.4, ease: 'easeInOut', delay: 1.1 }}
+              />
+            </div>
+          </motion.div>
         </div>
-
-        <div style={SERIF} className="text-[clamp(56px,min(15vw,19vh),220px)] leading-[0.9] font-medium tracking-[0.04em]">
-          <MaskedWord word="CEYLON" from="above" start={start} />
-        </div>
-
-        <motion.p
-          className="mt-[clamp(20px,3vw,36px)] text-[12px] md:text-[13px] uppercase text-charcoal/70 font-medium"
-          initial={{ opacity: 0, letterSpacing: '0.9em' }}
-          animate={start ? { opacity: 1, letterSpacing: '0.35em' } : {}}
-          transition={{ duration: 1.6, ease: EASE, delay: 1.1 }}
-        >
-          Heritage Textiles · Sri Lanka
-        </motion.p>
       </motion.div>
 
       {/* Scroll cue */}

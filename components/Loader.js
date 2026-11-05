@@ -31,6 +31,7 @@ export default function Loader() {
             opacity: 0,
             transition: { duration: 0.9, ease: [0.43, 0.13, 0.23, 0.96], delay: 0.1 },
           }}
+          data-loader
           className="fixed inset-0 z-[9999] bg-espresso flex flex-col items-center justify-center gap-6 pointer-events-none"
         >
           {/* Brand name */}

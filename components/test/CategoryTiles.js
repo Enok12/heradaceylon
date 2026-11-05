@@ -9,18 +9,25 @@ import { CATEGORIES } from '@/lib/categories'
 const EASE = [0.16, 1, 0.3, 1]
 const SERIF = { fontFamily: "'Cormorant Garamond', Georgia, serif" }
 
-// Tile widths in the horizontal track. Desktop: a unit is a quarter of the frame (less
-// gaps), New Arrivals spans two, so New Arrivals + Women + Men exactly fill the first
-// screen. Phones: New Arrivals fills the frame and the rest follow at 72%.
-const UNIT = 'w-[72%] md:w-[calc((100%-48px)/4)]'
-const WIDTHS = { new: 'w-full md:w-[calc((100%-48px)/2+16px)]' }
+// Categories shown for now. The rest (Sarees, Contemporary, Accessories, Bags) stay in
+// lib/categories.js. Adding slugs here brings back the sideways scroll on desktop: the
+// section measures its own overflow and pins itself. Below lg would also need the stacked
+// layout (grid classes on the track, col-span-2 and w-full below) back to a sideways row.
+const VISIBLE = ['new', 'women', 'men']
+const TILES = CATEGORIES.filter((c) => VISIBLE.includes(c.slug))
+
+// Tile widths in the track. Desktop: a unit is a quarter of the frame (less gaps), New
+// Arrivals spans two, so the three tiles exactly fill the screen. Phones and tablets: New
+// Arrivals across the top, the other two side by side beneath it.
+const UNIT = 'w-full lg:w-[calc((100%-48px)/4)]'
+const WIDTHS = { new: 'col-span-2 w-full lg:w-[calc((100%-48px)/2+16px)]' }
 
 // Rendered image width per tile. Tiles are full-height, so photos are sized by height:
 // the wide (~16:9) cover photos in narrow tiles render far wider than the tile itself.
 const IMAGE_SIZES = {
-  new: '(max-width: 768px) 200vw, 80vw',
-  women: '(max-width: 768px) 260vw, 110vw',
-  men: '(max-width: 768px) 260vw, 110vw',
+  new: '(max-width: 1023px) 200vw, 80vw',
+  women: '(max-width: 1023px) 260vw, 110vw',
+  men: '(max-width: 1023px) 260vw, 110vw',
 }
 
 // A tile counts as in view once it is 8% of the screen width inside the right edge, so
@@ -168,11 +175,46 @@ function Tile({ category, index }) {
   )
 }
 
+const BRAND_LOGO = '/images/logo/embossed-brand-name.png'
+
+// Shapes the logo's light sweep to the artwork, using its transparency
+const BRAND_MASK = {
+  WebkitMaskImage: `url(${BRAND_LOGO})`,
+  maskImage: `url(${BRAND_LOGO})`,
+  WebkitMaskSize: '100% 100%',
+  maskSize: '100% 100%',
+}
+
+// Header entrance, as one timeline: the logo wipes on and catches the light, the gold rules
+// draw away from the tagline, its two phrases meet at the centre, then View All arrives.
+const headerStep = (hidden, show, delay, duration = 1) => ({
+  hidden,
+  show: { ...show, transition: { duration, ease: EASE, delay } },
+})
+const HEADER = {
+  logo: headerStep(
+    { clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)', x: -16 },
+    { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', x: 0 },
+    0, 1.2,
+  ),
+  sheen: {
+    hidden: { x: '-110%' },
+    show: { x: '320%', transition: { duration: 1.2, ease: 'easeInOut', delay: 0.8 } },
+  },
+  rule: headerStep({ scaleX: 0 }, { scaleX: 1 }, 0.3, 1.2),
+  wordsLeft: headerStep({ opacity: 0, x: -28 }, { opacity: 1, x: 0 }, 0.45),
+  wordsRight: headerStep({ opacity: 0, x: 28 }, { opacity: 1, x: 0 }, 0.45),
+  dot: headerStep({ opacity: 0, y: 8 }, { opacity: 1, y: 0 }, 0.85, 0.6),
+  viewLine: headerStep({ scaleX: 0 }, { scaleX: 1 }, 0.6),
+  viewAll: headerStep({ opacity: 0, x: 24 }, { opacity: 1, x: 0 }, 0.7, 0.9),
+}
+
 export default function CategoryTiles() {
   const outerRef = useRef(null)
   const frameRef = useRef(null)
   const trackRef = useRef(null)
   const [overflow, setOverflow] = useState(0)
+  const [headerIn, setHeaderIn] = useState(false)
 
   // How far the track extends past the frame's right edge = how far it slides
   useLayoutEffect(() => {
@@ -196,10 +238,13 @@ export default function CategoryTiles() {
   const x = useSpring(rawX, { stiffness: 140, damping: 28, mass: 0.5 })
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.5 })
 
-  // Keep the navbar tucked away while pinned, so it can't cover the heading on scroll-up
+  // Keep the navbar tucked away while pinned, so it can't cover the heading on scroll-up.
+  // Also starts the header's entrance as the section is about to land, not as it first
+  // appears: the header reaches the screen early in the snap's glide.
   useEffect(() => {
     const onScroll = () => {
       const r = outerRef.current?.getBoundingClientRect()
+      if (r && r.top <= window.innerHeight * 0.15) setHeaderIn(true)
       const pinned = r && r.top <= 1 && r.bottom >= window.innerHeight - 1
       if (pinned) document.body.dataset.navHidden = 'true'
       else delete document.body.dataset.navHidden
@@ -215,37 +260,70 @@ export default function CategoryTiles() {
   return (
     <section ref={outerRef} className="relative bg-cream" style={{ height: `calc(100svh + ${overflow}px)` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden flex flex-col px-4 md:px-12 pt-6 md:pt-7 pb-4 md:pb-5">
+        {/* Silk background, anchored to the top so its waves sit behind the header row */}
+        <Image
+          src="/images/backgrounds/ivory-silk-waves.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="-z-10 object-cover object-top"
+        />
+
+        {/* Equal side columns keep the tagline centred on the page; it needs the width of a
+            1340px screen to fit between the logo and View All, so narrower screens drop it */}
         <motion.div
-          className="flex-shrink-0 flex items-end justify-between h-[84px] md:h-[110px] mb-4 md:mb-6 px-2"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, ease: EASE }}
+          initial="hidden"
+          animate={headerIn ? 'show' : 'hidden'}
+          className="flex-shrink-0 flex items-end justify-between min-[1340px]:grid min-[1340px]:grid-cols-[minmax(381px,1fr)_minmax(0,720px)_minmax(381px,1fr)] min-[1340px]:gap-6 h-[84px] md:h-[110px] mb-4 md:mb-6 px-2"
         >
-          <div>
-            <p className="flex items-center gap-3 text-[11px] tracking-[0.28em] uppercase text-gold font-medium mb-4">
-              <span className="w-6 h-px bg-gold inline-block" />
-              Shop by Category
+          {/* Brand name artwork, the full height of the heading row */}
+          <motion.div variants={HEADER.logo} className="relative h-full aspect-[974/281] justify-self-start">
+            <Image
+              src={BRAND_LOGO}
+              alt="Herada Ceylon"
+              fill
+              priority
+              sizes="(max-width: 768px) 291px, 381px"
+              className="object-contain object-left"
+            />
+            <div className="absolute inset-0 overflow-hidden pointer-events-none" style={BRAND_MASK}>
+              <motion.span
+                variants={HEADER.sheen}
+                className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFE9A8] to-transparent"
+              />
+            </div>
+          </motion.div>
+
+          <div className="hidden min-[1340px]:flex items-center justify-center gap-5 self-center">
+            <motion.span variants={HEADER.rule} className="hidden min-[1400px]:block flex-1 max-w-[160px] h-px bg-gold/70 origin-right" />
+            <p className="text-[10px] min-[1536px]:text-[12px] tracking-[0.24em] uppercase text-charcoal/80 font-medium whitespace-nowrap">
+              <motion.span variants={HEADER.wordsLeft} className="inline-block">Timeless Elegance</motion.span>
+              <motion.span variants={HEADER.dot} className="inline-block mx-3 text-charcoal">•</motion.span>
+              <motion.span variants={HEADER.wordsRight} className="inline-block">Sri Lankan Craftsmanship</motion.span>
             </p>
-            <h2 style={SERIF} className="text-[clamp(38px,5vw,64px)] font-medium text-charcoal leading-[1.02]">
-              Find your <em className="italic">piece</em>
-            </h2>
+            <motion.span variants={HEADER.rule} className="hidden min-[1400px]:block flex-1 max-w-[160px] h-px bg-gold/70 origin-left" />
           </div>
-          <div className="flex items-center gap-6 pb-2">
-            {/* Horizontal progress through the categories */}
-            <span className="hidden sm:block relative w-24 md:w-32 h-px bg-charcoal/15 overflow-hidden">
-              <motion.span className="absolute inset-0 bg-charcoal origin-left" style={{ scaleX: progress }} />
-            </span>
-            <Link href="/collections" className="hidden md:flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-charcoal no-underline font-medium hover:gap-4 transition-all duration-300">
-              View All <span>→</span>
-            </Link>
+
+          <div className="flex items-center justify-end gap-6 pb-2">
+            {/* Faint line by View All; it fills to show progress when the tiles scroll sideways */}
+            <motion.span variants={HEADER.viewLine} className="hidden md:block relative w-24 md:w-32 h-px bg-charcoal/15 overflow-hidden origin-right">
+              {overflow > 0 && (
+                <motion.span className="absolute inset-0 bg-charcoal origin-left" style={{ scaleX: progress }} />
+              )}
+            </motion.span>
+            <motion.div variants={HEADER.viewAll}>
+              <Link href="/collections" className="hidden md:flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-charcoal no-underline font-medium hover:gap-4 transition-all duration-300">
+                View All <span>→</span>
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
 
-        {/* Visible frame: tiles are full frame height in one horizontal row */}
+        {/* Visible frame: desktop tiles are full frame height in one row */}
         <div ref={frameRef} className="relative flex-1 min-h-0 overflow-hidden">
-          <motion.div ref={trackRef} style={{ x }} className="flex h-full gap-3 md:gap-4 [perspective:1400px]">
-            {CATEGORIES.map((category, i) => (
+          <motion.div ref={trackRef} style={{ x }} className="grid grid-cols-2 grid-rows-2 lg:flex h-full gap-3 md:gap-4 [perspective:1400px]">
+            {TILES.map((category, i) => (
               <Tile key={category.slug} category={category} index={i} />
             ))}
           </motion.div>
