@@ -17,16 +17,25 @@ const LOGO_MASK = {
 export default function LogoIntro() {
   const ref = useRef(null)
   const [start, setStart] = useState(false)
+  const [revealed, setRevealed] = useState(false)
 
-  // The site Loader covers every full page load (~2.4s on a first visit, ~1s after that);
-  // hold the entrance until it has left the page, so the seal isn't revealed behind it
+  // Hold the entrance until (1) the logo file is downloaded and decoded, so the seal and the
+  // sheen's mask (the same file) are ready to paint on the first frame, and (2) the site
+  // Loader, which covers every full page load, has left, so the seal isn't revealed behind it
   useEffect(() => {
-    const t = setInterval(() => {
-      if (document.querySelector('[data-loader]')) return
-      clearInterval(t)
-      setStart(true)
-    }, 50)
-    return () => clearInterval(t)
+    let cancelled = false
+    let poll
+    const img = new window.Image()
+    img.src = LOGO
+    img.decode().catch(() => {}).then(() => {
+      if (cancelled) return
+      poll = setInterval(() => {
+        if (document.querySelector('[data-loader]')) return
+        clearInterval(poll)
+        setStart(true)
+      }, 50)
+    })
+    return () => { cancelled = true; clearInterval(poll) }
   }, [])
 
   // Logo drifts up and fades as the visitor scrolls on to the categories
@@ -48,21 +57,29 @@ export default function LogoIntro() {
             className="absolute inset-0"
             initial={{ clipPath: 'circle(0% at 50% 50%)', rotate: -24, opacity: 0, filter: 'blur(10px)' }}
             animate={start ? { clipPath: 'circle(75% at 50% 50%)', rotate: 0, opacity: 1, filter: 'blur(0px)' } : {}}
-            transition={{ duration: 1.8, ease: EASE }}
+            transition={{ duration: 1.2, ease: EASE }}
+            onAnimationComplete={() => { if (start) setRevealed(true) }}
           >
-            <Image src={LOGO} alt="" fill priority sizes="(max-width: 768px) 84vw, 60vh" className="object-contain" />
-
-            {/* Then a band of light sweeps once across the gold. Inside the animated layer, so
-                it turns with the seal and can't show beyond what the circle has revealed. */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none" style={LOGO_MASK}>
-              <motion.span
-                className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-[#FFE9A8] to-transparent"
-                initial={{ x: '-120%' }}
-                animate={start ? { x: '320%' } : {}}
-                transition={{ duration: 1.4, ease: 'easeInOut', delay: 1.1 }}
-              />
-            </div>
+            {/* unoptimized: served as the original file, the same one the sheen's mask uses,
+                so it downloads once and both are ready together */}
+            <Image src={LOGO} alt="" fill priority unoptimized className="object-contain" />
           </motion.div>
+
+          {/* Then a band of light sweeps once across the gold, matching the brand-name sheen in
+              the categories section. The masked layer is mounted from the start so its mask is
+              already applied when the sweep begins (a freshly mounted mask paints nothing for a
+              moment, which made the band appear mid-way). It's outside the blurred layer and
+              only moves once the seal has fully opened, so no light shows while it comes in. */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none" style={LOGO_MASK}>
+            <motion.span
+              // left-0 matters: without it the band's start follows the section's text-center
+              // and sits mid-seal, so the sweep looked like it began in the middle
+              className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFE9A8] to-transparent"
+              initial={{ x: '-110%' }}
+              animate={revealed ? { x: '320%' } : {}}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
+            />
+          </div>
         </div>
       </motion.div>
 
