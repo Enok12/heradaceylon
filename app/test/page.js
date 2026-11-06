@@ -13,7 +13,7 @@ export default function TestPage() {
     <>
       <SectionSnap />
       <div data-snap-section><LogoIntro /></div>
-      <div data-snap-section><CategoryTiles /></div>
+      <div data-snap-section data-snap-transition="fade"><CategoryTiles /></div>
       <div data-snap-section><Hero /></div>
     </>
   )

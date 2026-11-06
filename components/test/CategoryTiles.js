@@ -89,19 +89,24 @@ function Tile({ category, index }) {
   }
   const onLeave = () => { px.set(0); py.set(0) }
 
+  // Coming-soon tiles aren't links and skip the hover effects (tilt, photo pan, frame,
+  // Explore)
+  const soon = !!category.comingSoon
+  const TileTag = soon ? motion.div : MotionLink
+  const linkProps = soon
+    ? { 'aria-disabled': true, title: `${category.label}: coming soon` }
+    : { href: category.href, onMouseMove: onMove, onMouseLeave: onLeave, style: { rotateX, rotateY, transformPerspective: 1100 } }
+
   return (
-    <MotionLink
-      href={category.href}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{ rotateX, rotateY, transformPerspective: 1100 }}
+    <TileTag
+      {...linkProps}
       // Entrance: uncovered bottom-to-top. The first screen staggers in together; later
       // tiles reveal one by one as the horizontal scroll brings them in from the right.
       initial={{ clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)' }}
       whileInView={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' }}
       viewport={VIEWPORT}
       transition={{ duration: 1.1, ease: EASE, delay: delayFor(index) }}
-      className={`group relative block flex-shrink-0 h-full overflow-hidden rounded-2xl no-underline ${WIDTHS[category.slug] ?? UNIT} ${
+      className={`${soon ? 'cursor-default' : 'group'} relative block flex-shrink-0 h-full overflow-hidden rounded-2xl no-underline ${WIDTHS[category.slug] ?? UNIT} ${
         category.image ? 'bg-sand' : 'bg-charcoal'
       }`}
     >
@@ -141,7 +146,7 @@ function Tile({ category, index }) {
       )}
 
       {/* Inset frame that draws itself on hover */}
-      <span className="pointer-events-none absolute inset-3 md:inset-4">
+      <span className={`pointer-events-none absolute inset-3 md:inset-4 ${soon ? 'hidden' : ''}`}>
         <span className="absolute top-0 left-0 h-px w-full bg-white/80 origin-left scale-x-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />
         <span className="absolute bottom-0 right-0 h-px w-full bg-white/80 origin-right scale-x-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />
         <span className="absolute top-0 right-0 w-px h-full bg-white/80 origin-top scale-y-0 transition-transform duration-700 delay-100 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-y-100" />
@@ -158,12 +163,12 @@ function Tile({ category, index }) {
       >
         <div className="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:group-hover:-translate-y-2">
           <p className="text-[11px] tracking-[0.22em] uppercase font-medium text-white/75 mb-1.5">
-            {count > 0 ? `${count} ${count === 1 ? 'piece' : 'pieces'}` : 'Coming soon'}
+            {soon || count === 0 ? 'Coming soon' : `${count} ${count === 1 ? 'piece' : 'pieces'}`}
           </p>
           <h3 style={SERIF} className={`${category.slug === 'new' ? 'text-[clamp(36px,4.5vw,64px)]' : 'text-[clamp(26px,2.6vw,38px)]'} font-medium leading-none`}>
             {category.label}
           </h3>
-          <span className="mt-3 block overflow-hidden">
+          <span className={`mt-3 overflow-hidden ${soon ? 'hidden' : 'block'}`}>
             <span className="flex items-center gap-3 text-[11px] tracking-[0.22em] uppercase font-medium transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:translate-y-full md:group-hover:translate-y-0">
               Explore
               <span className="inline-block w-6 h-px bg-current transition-all duration-700 group-hover:w-10" />
@@ -171,21 +176,13 @@ function Tile({ category, index }) {
           </span>
         </div>
       </motion.div>
-    </MotionLink>
+    </TileTag>
   )
 }
 
 const BRAND_LOGO = '/images/logo/embossed-brand-name.png'
 
-// Shapes the logo's light sweep to the artwork, using its transparency
-const BRAND_MASK = {
-  WebkitMaskImage: `url(${BRAND_LOGO})`,
-  maskImage: `url(${BRAND_LOGO})`,
-  WebkitMaskSize: '100% 100%',
-  maskSize: '100% 100%',
-}
-
-// Header entrance, as one timeline: the logo wipes on and catches the light, the gold rules
+// Header entrance, as one timeline: the logo wipes on from the left, the gold rules
 // draw away from the tagline, its two phrases meet at the centre, then View All arrives.
 const headerStep = (hidden, show, delay, duration = 1) => ({
   hidden,
@@ -197,10 +194,6 @@ const HEADER = {
     { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', x: 0 },
     0, 1.2,
   ),
-  sheen: {
-    hidden: { x: '-110%' },
-    show: { x: '320%', transition: { duration: 1.2, ease: 'easeInOut', delay: 0.8 } },
-  },
   rule: headerStep({ scaleX: 0 }, { scaleX: 1 }, 0.3, 1.2),
   wordsLeft: headerStep({ opacity: 0, x: -28 }, { opacity: 1, x: 0 }, 0.45),
   wordsRight: headerStep({ opacity: 0, x: 28 }, { opacity: 1, x: 0 }, 0.45),
@@ -238,28 +231,20 @@ export default function CategoryTiles() {
   const x = useSpring(rawX, { stiffness: 140, damping: 28, mass: 0.5 })
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.5 })
 
-  // Keep the navbar tucked away while pinned, so it can't cover the heading on scroll-up.
-  // Also starts the header's entrance as the section is about to land, not as it first
-  // appears: the header reaches the screen early in the snap's glide.
+  // Start the header's entrance as the section lands, not as it first enters the screen
   useEffect(() => {
     const onScroll = () => {
       const r = outerRef.current?.getBoundingClientRect()
       if (r && r.top <= window.innerHeight * 0.15) setHeaderIn(true)
-      const pinned = r && r.top <= 1 && r.bottom >= window.innerHeight - 1
-      if (pinned) document.body.dataset.navHidden = 'true'
-      else delete document.body.dataset.navHidden
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      delete document.body.dataset.navHidden
-    }
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
     <section ref={outerRef} className="relative bg-cream" style={{ height: `calc(100svh + ${overflow}px)` }}>
-      <div className="sticky top-0 h-[100svh] overflow-hidden flex flex-col px-4 md:px-12 pt-6 md:pt-7 pb-4 md:pb-5">
+      <div className="sticky top-0 h-[100svh] overflow-hidden flex flex-col px-4 md:px-12 pt-[88px] md:pt-[92px] pb-4 md:pb-5">
         {/* Silk background, anchored to the top so its waves sit behind the header row */}
         <Image
           src="/images/backgrounds/ivory-silk-waves.png"
@@ -287,12 +272,6 @@ export default function CategoryTiles() {
               sizes="(max-width: 768px) 291px, 381px"
               className="object-contain object-left"
             />
-            <div className="absolute inset-0 overflow-hidden pointer-events-none" style={BRAND_MASK}>
-              <motion.span
-                variants={HEADER.sheen}
-                className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFE9A8] to-transparent"
-              />
-            </div>
           </motion.div>
 
           <div className="hidden min-[1340px]:flex items-center justify-center gap-5 self-center">

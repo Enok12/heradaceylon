@@ -6,7 +6,8 @@ import { motion } from 'framer-motion'
 import { useCart } from '@/context/CartContext'
 import { cardReveal } from '@/lib/animations'
 
-export default function ProductCard({ product, priority = false }) {
+// infoClassName: extra classes for the name/price block, e.g. an inset in a near-full-width grid
+export default function ProductCard({ product, priority = false, infoClassName = '' }) {
   const { addItem } = useCart()
   const [adding, setAdding] = useState(false)
 
@@ -25,7 +26,8 @@ export default function ProductCard({ product, priority = false }) {
     >
       <Link href={`/product/${product.slug}`} className="block no-underline">
         {/* Image Container */}
-        <div className="relative overflow-hidden bg-sand aspect-[3/4] mb-4">
+        {/* translateZ(0) keeps the rounded corners clipping while the photo zooms on hover */}
+        <div className="relative overflow-hidden rounded-2xl bg-sand aspect-[3/4] mb-4 [transform:translateZ(0)]">
           {/* Primary Image */}
           <Image
             src={product.images[0]}
@@ -49,7 +51,7 @@ export default function ProductCard({ product, priority = false }) {
 
           {/* Badge */}
           {product.badge && (
-            <span className="absolute top-4 left-4 text-[8px] tracking-[0.2em] uppercase bg-charcoal text-cream px-3 py-1 font-normal z-10">
+            <span className="absolute top-4 left-4 text-[8px] tracking-[0.2em] uppercase bg-charcoal text-cream px-3 py-1 rounded-full font-normal z-10">
               {product.badge}
             </span>
           )}
@@ -59,7 +61,7 @@ export default function ProductCard({ product, priority = false }) {
             onClick={handleAdd}
             initial={{ opacity: 0, y: 8 }}
             whileHover={{ opacity: 1, y: 0 }}
-            className="absolute bottom-4 left-4 right-4 py-3 bg-cream/95 text-charcoal text-[9px] tracking-[0.22em] uppercase font-normal
+            className="absolute bottom-4 left-4 right-4 py-3 rounded-full bg-cream/95 text-charcoal text-[9px] tracking-[0.22em] uppercase font-normal
                        opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
                        hover:bg-charcoal hover:text-cream border border-transparent hover:border-charcoal"
           >
@@ -68,7 +70,7 @@ export default function ProductCard({ product, priority = false }) {
         </div>
 
         {/* Info */}
-        <div className="space-y-1">
+        <div className={`space-y-1 ${infoClassName}`}>
           <p className="text-[9px] tracking-[0.18em] uppercase text-muted font-normal">
             {product.subcategory}
           </p>

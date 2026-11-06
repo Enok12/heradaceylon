@@ -34,8 +34,12 @@ export default function ProductPage({ params }) {
   const [showStickyBar, setShowStickyBar] = useState(false)
   const { hidden: navHidden } = useNavScroll()
   const addBtnRef = useRef(null)
-  const related = products.filter(p => p.id !== product.id && p.category === product.category).slice(0, 4)
-  const relatedTrack = useRef(null)
+  // Same category first, topped up from other categories so the row is always full (4 on desktop)
+  const others = products.filter(p => p.id !== product.id)
+  const related = [
+    ...others.filter(p => p.category === product.category),
+    ...others.filter(p => p.category !== product.category),
+  ].slice(0, 4)
   const infoRef = useRef(null)
   const inView = useInView(infoRef, { once: true })
 
@@ -303,12 +307,8 @@ export default function ProductPage({ params }) {
             </h2>
           </div>
 
-          {/* Horizontal scroll */}
-          <div
-            ref={relatedTrack}
-            className="flex gap-5 overflow-x-auto pl-8 md:pl-16 pr-8 scroll-snap-x pb-2"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: '#CDB99E #F0EAE0' }}
-          >
+          {/* Same near-full-width grid as the collections page */}
+          <div className="px-2 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-1.5 gap-y-8">
             {related.map((p, i) => (
               <motion.div
                 key={p.id}
@@ -316,9 +316,8 @@ export default function ProductPage({ params }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="flex-shrink-0 w-[240px] md:w-[280px] scroll-snap-item"
               >
-                <ProductCard product={p} />
+                <ProductCard product={p} infoClassName="px-3 md:px-4" />
               </motion.div>
             ))}
           </div>

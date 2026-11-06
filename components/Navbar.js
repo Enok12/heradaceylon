@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavScroll } from '@/hooks/useNavScroll'
 import { useCart } from '@/context/CartContext'
+import TestNavbar from '@/components/test/TestNavbar'
 
 const NAV_LINKS = [
   { label: 'Collections', href: '/collections' },
@@ -27,6 +28,9 @@ export default function Navbar() {
   useEffect(() => {
     if (!hidden) setOnHero(pathname === '/' && !scrolled)
   }, [hidden, scrolled, pathname])
+  // The Test Page (alternate homepage under review) has its own navbar
+  if (pathname === '/test') return <TestNavbar links={NAV_LINKS} />
+
   const text = onHero ? 'text-white' : 'text-charcoal'
   const bar = onHero ? 'bg-white' : 'bg-charcoal'
   const badge = onHero ? 'bg-white text-charcoal' : 'bg-charcoal text-white'

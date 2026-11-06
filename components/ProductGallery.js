@@ -54,7 +54,10 @@ export default function ProductGallery({ images, name }) {
               key={i}
               ref={(el) => (imageRefs.current[i] = el)}
               data-index={i}
-              className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-sand scroll-mt-[96px]"
+              // Fits the screen as the page opens: below the 72px navbar and the ~54px breadcrumb,
+              // with 16px to spare at the bottom. The height is capped, and the width shrinks
+              // with it to keep the 3:4 shape.
+              className="relative aspect-[3/4] w-full max-w-[calc((100svh-142px)*0.75)] rounded-2xl overflow-hidden bg-sand scroll-mt-[96px]"
             >
               <Image
                 src={src}

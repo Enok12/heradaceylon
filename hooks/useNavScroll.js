@@ -10,10 +10,8 @@ export function useNavScroll() {
     const onScroll = () => {
       const y = window.scrollY
       setScrolled(y > 60)
-      // Hide the moment the user scrolls down; reveal on scroll up or at the top.
-      // A page section can hold it hidden via body[data-nav-hidden] (Test Page tiles).
-      if (document.body.dataset.navHidden === 'true') setHidden(true)
-      else if (y <= 0) setHidden(false)
+      // Hide the moment the user scrolls down; reveal on scroll up or at the top
+      if (y <= 0) setHidden(false)
       else if (y > lastY.current) setHidden(true)
       else if (y < lastY.current) setHidden(false)
       lastY.current = y
