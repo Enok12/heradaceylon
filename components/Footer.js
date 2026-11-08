@@ -6,6 +6,15 @@ import { useState } from 'react'
 const SHOP = ['New Arrivals', 'Sarees', 'Handloom', 'Contemporary', 'Accessories', 'Gift Cards']
 const INFO  = ['Our Story', 'Artisans', 'Sustainability', 'Editorial', 'Press', 'Stockists']
 const CARE  = ['Shipping & Returns', 'Size Guide', 'Care Instructions', 'Custom Orders', 'Contact Us', 'FAQ']
+// Footer labels that have a page; the rest are still placeholders
+const PAGES = {
+  'Our Story': '/about',
+  'Shipping & Returns': '/shipping',
+  'Contact Us': '/contact',
+  'FAQ': '/faqs',
+  'Privacy Policy': '/privacy',
+  'Terms of Service': '/terms',
+}
 
 export default function Footer() {
   const [email, setEmail] = useState('')
@@ -76,7 +85,7 @@ export default function Footer() {
               <ul className="space-y-2.5">
                 {links.map(l => (
                   <li key={l}>
-                    <Link href="#" className="text-[11px] text-cream/50 font-normal tracking-[0.04em] hover:text-cream transition-colors duration-300 no-underline">
+                    <Link href={PAGES[l] ?? '#'} className="text-[11px] text-cream/50 font-normal tracking-[0.04em] hover:text-cream transition-colors duration-300 no-underline">
                       {l}
                     </Link>
                   </li>
@@ -93,7 +102,7 @@ export default function Footer() {
           </span>
           <div className="flex gap-6">
             {['Privacy Policy', 'Terms of Service', 'Cookies'].map(l => (
-              <Link key={l} href="#" className="text-[10px] text-cream/20 hover:text-cream/50 transition-colors duration-300 no-underline font-normal tracking-[0.06em]">
+              <Link key={l} href={PAGES[l] ?? '#'} className="text-[10px] text-cream/20 hover:text-cream/50 transition-colors duration-300 no-underline font-normal tracking-[0.06em]">
                 {l}
               </Link>
             ))}

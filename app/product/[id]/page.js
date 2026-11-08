@@ -33,6 +33,15 @@ export default function ProductPage({ params }) {
   const [added, setAdded] = useState(false)
   const [showStickyBar, setShowStickyBar] = useState(false)
   const { hidden: navHidden } = useNavScroll()
+
+  // The breadcrumb returns to the collections view this product was opened from, filters included
+  const [listingUrl, setListingUrl] = useState('/collections')
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem('hc-listing'))
+      if (saved?.url) setListingUrl(saved.url)
+    } catch {}
+  }, [])
   const addBtnRef = useRef(null)
   // Same category first, topped up from other categories so the row is always full (4 on desktop)
   const others = products.filter(p => p.id !== product.id)
@@ -122,7 +131,13 @@ export default function ProductPage({ params }) {
       <div className="px-8 md:px-16 py-5 flex items-center gap-3 text-[9px] tracking-[0.16em] uppercase text-muted font-normal">
         <Link href="/" className="hover:text-charcoal transition-colors duration-200 no-underline">Home</Link>
         <span className="opacity-30">/</span>
-        <Link href="/collections" className="hover:text-charcoal transition-colors duration-200 no-underline">Collections</Link>
+        <Link
+          href={listingUrl}
+          onClick={() => { if (listingUrl !== '/collections') try { sessionStorage.setItem('hc-listing-return', '1') } catch {} }}
+          className="hover:text-charcoal transition-colors duration-200 no-underline"
+        >
+          Collections
+        </Link>
         <span className="opacity-30">/</span>
         <span className="text-charcoal">{product.name}</span>
       </div>

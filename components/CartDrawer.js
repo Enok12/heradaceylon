@@ -24,7 +24,7 @@ export default function CartDrawer() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-espresso/40 z-[100] backdrop-blur-[2px]"
+            className="fixed inset-0 bg-espresso/40 z-[220] backdrop-blur-[2px]"
           />
         )}
       </AnimatePresence>
@@ -37,7 +37,7 @@ export default function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-0 right-0 bottom-0 w-full max-w-[420px] bg-mist z-[101] flex flex-col shadow-[-8px_0_48px_rgba(30,18,8,0.12)]"
+            className="fixed top-0 right-0 bottom-0 w-full max-w-[420px] bg-mist z-[221] flex flex-col shadow-[-8px_0_48px_rgba(30,18,8,0.12)]"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-8 py-6 border-b border-sand">

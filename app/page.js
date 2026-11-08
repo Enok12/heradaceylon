@@ -1,22 +1,15 @@
-import products from '@/data/products.json'
+import LogoIntro from '@/components/home/LogoIntro'
+import CategoryTiles from '@/components/home/CategoryTiles'
+import SectionSnap from '@/components/home/SectionSnap'
 import Hero from '@/components/Hero'
-import Ticker from '@/components/Ticker'
-import FeaturedCollection from '@/components/FeaturedCollection'
-import CategoryBlocks from '@/components/CategoryBlocks'
-import NewArrivals from '@/components/NewArrivals'
-import EditorialBanner from '@/components/EditorialBanner'
-import BrandStory from '@/components/BrandStory'
 
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <NewArrivals products={products} />
-      <Ticker />
-      <FeaturedCollection products={products} />
-      <CategoryBlocks />
-      <EditorialBanner />
-      <BrandStory />
+      <SectionSnap />
+      <div data-snap-section><LogoIntro /></div>
+      <div data-snap-section data-snap-transition="fade"><CategoryTiles /></div>
+      <div data-snap-section><Hero /></div>
     </>
   )
 }

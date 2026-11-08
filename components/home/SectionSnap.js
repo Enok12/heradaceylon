@@ -82,11 +82,16 @@ export default function SectionSnap() {
       return null
     }
 
-    // The Test Page menu covers the page; leave scrolling alone while it's open
+    // The navbar menu covers the page; leave scrolling alone while it's open
     const menuOpen = () => document.body.dataset.menuOpen === 'true'
 
     const onWheel = (e) => {
-      if (menuOpen()) { e.preventDefault(); return }
+      if (menuOpen()) {
+        // The page stays put, but a menu too tall for the screen can scroll inside itself
+        const list = e.target.closest?.('[data-menu-scroll]')
+        if (!list || list.scrollHeight <= list.clientHeight) e.preventDefault()
+        return
+      }
       if (animating) { e.preventDefault(); return }
       const t = target(Math.sign(e.deltaY))
       if (t !== null) { e.preventDefault(); snap(t); return }
