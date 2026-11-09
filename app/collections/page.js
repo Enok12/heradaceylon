@@ -88,7 +88,7 @@ const CLIP_SHOWN = 'polygon(-5% -5%, 105% -5%, 105% 105%, -5% 105%)'
 // Entrance for one product: uncovered from the top down (photo, then name and price) while
 // rising slightly, once it scrolls into view. forwardRef: AnimatePresence's popLayout needs
 // the child's ref.
-const ProductTile = forwardRef(function ProductTile({ ready, delay, children }, outerRef) {
+const ProductTile = forwardRef(function ProductTile({ delay, children }, outerRef) {
   const ref = useRef(null)
   useImperativeHandle(outerRef, () => ref.current)
   const inView = useInView(ref, { once: true, margin: '0px 0px -8% 0px' })
@@ -101,7 +101,7 @@ const ProductTile = forwardRef(function ProductTile({ ready, delay, children }, 
       ref={ref}
       layout="position"
       initial={hidden}
-      animate={reduceMotion || (ready && inView) ? shown : hidden}
+      animate={reduceMotion || inView ? shown : hidden}
       exit={{ opacity: 0, transition: { duration: 0.25 } }}
       transition={reduceMotion ? { duration: 0 } : { duration: 1.1, ease: EASE, delay }}
       // Any onUpdate keeps framer-motion from using browser-run animations here: as those end
@@ -144,17 +144,6 @@ export default function CollectionsPage() {
     measure()
     window.addEventListener('resize', measure)
     return () => window.removeEventListener('resize', measure)
-  }, [])
-
-  // The site Loader covers every full page load; hold the tiles' entrance until it has left
-  const [pageReady, setPageReady] = useState(false)
-  useEffect(() => {
-    const poll = setInterval(() => {
-      if (document.querySelector('[data-loader]')) return
-      clearInterval(poll)
-      setPageReady(true)
-    }, 50)
-    return () => clearInterval(poll)
   }, [])
 
   // Changing the filter, sort or grid size brings a visitor who has scrolled down back up to
@@ -515,7 +504,7 @@ export default function CollectionsPage() {
             >
               <AnimatePresence mode="popLayout">
                 {filtered.map((product, i) => (
-                  <ProductTile key={product.id} ready={pageReady} delay={(i % (columns ?? 4)) * 0.1}>
+                  <ProductTile key={product.id} delay={(i % (columns ?? 4)) * 0.1}>
                     <ProductCard product={product} priority={i < 4} infoClassName="px-3 md:px-4" />
                   </ProductTile>
                 ))}

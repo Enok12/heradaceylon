@@ -64,8 +64,8 @@ export default function PrivacyPage() {
 
       <Section title="Cookies and local storage">
         <P>
-          We use your browser's storage for essential site functions, for example to remember that you've
-          already seen our welcome screen during a visit. <Fill>List any cookies added later, such as for analytics or advertising.</Fill>
+          We use your browser's storage for essential site functions, for example to return you to the same
+          filtered view of our collections after you look at a product. <Fill>List any cookies added later, such as for analytics or advertising.</Fill>
         </P>
       </Section>
 

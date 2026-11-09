@@ -1,8 +1,8 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion'
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import products from '@/data/products.json'
 import { CATEGORIES } from '@/lib/categories'
 
@@ -76,26 +76,12 @@ function Tile({ category, index }) {
   const photoRef = useRef(null)
   const cropStyle = useSmartCrop(photoRef, category.crop)
 
-  // Pointer-driven 3D tilt, springed so it eases in and settles back
-  const px = useMotionValue(0)
-  const py = useMotionValue(0)
-  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [6, -6]), { stiffness: 150, damping: 18 })
-  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-6, 6]), { stiffness: 150, damping: 18 })
-
-  const onMove = (e) => {
-    const r = e.currentTarget.getBoundingClientRect()
-    px.set((e.clientX - r.left) / r.width - 0.5)
-    py.set((e.clientY - r.top) / r.height - 0.5)
-  }
-  const onLeave = () => { px.set(0); py.set(0) }
-
-  // Coming-soon tiles aren't links and skip the hover effects (tilt, photo pan, frame,
-  // Explore)
+  // Coming-soon tiles aren't links, but hover the same way; only Explore is left out
   const soon = !!category.comingSoon
   const TileTag = soon ? motion.div : MotionLink
   const linkProps = soon
     ? { 'aria-disabled': true, title: `${category.label}: coming soon` }
-    : { href: category.href, onMouseMove: onMove, onMouseLeave: onLeave, style: { rotateX, rotateY, transformPerspective: 1100 } }
+    : { href: category.href }
 
   return (
     <TileTag
@@ -106,31 +92,36 @@ function Tile({ category, index }) {
       whileInView={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' }}
       viewport={VIEWPORT}
       transition={{ duration: 1.1, ease: EASE, delay: delayFor(index) }}
-      className={`${soon ? 'cursor-default' : 'group'} relative block flex-shrink-0 h-full overflow-hidden rounded-2xl no-underline ${WIDTHS[category.slug] ?? UNIT} ${
+      className={`group ${soon ? 'cursor-default' : ''} relative block flex-shrink-0 h-full overflow-hidden rounded-2xl no-underline ${WIDTHS[category.slug] ?? UNIT} ${
         category.image ? 'bg-sand' : 'bg-charcoal'
       }`}
     >
       {category.image ? (
         <>
-          {/* Photo settles up into place on entrance, then pans upward on hover */}
+          {/* Photo settles up into place on entrance, then pans upward on hover. Two layers:
+              framer-motion's inline transform on the outer one would override the hover pan. */}
           <motion.div
             // Extra height above and below so neither the entrance settle (8%) nor the hover
             // pan (-5%) ever exposes the tile background
-            ref={photoRef}
-            className="absolute inset-x-0 -top-[10%] h-[125%] transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-[5%]"
+            className="absolute inset-x-0 -top-[10%] h-[125%]"
             initial={{ y: '8%' }}
             whileInView={{ y: '0%' }}
             viewport={VIEWPORT}
             transition={{ duration: 1.4, ease: EASE, delay: delayFor(index) }}
           >
-            <Image
-              src={category.image}
-              alt=""
-              fill
-              className="object-cover"
-              style={cropStyle ?? { objectPosition: category.focus }}
-              sizes={IMAGE_SIZES[category.slug] ?? '(max-width: 768px) 150vw, 40vw'}
-            />
+            <div
+              ref={photoRef}
+              className="absolute inset-0 transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-[5%]"
+            >
+              <Image
+                src={category.image}
+                alt=""
+                fill
+                className="object-cover"
+                style={cropStyle ?? { objectPosition: category.focus }}
+                sizes={IMAGE_SIZES[category.slug] ?? '(max-width: 768px) 150vw, 40vw'}
+              />
+            </div>
           </motion.div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent opacity-80 transition-opacity duration-700 group-hover:opacity-100" />
         </>
@@ -146,7 +137,7 @@ function Tile({ category, index }) {
       )}
 
       {/* Inset frame that draws itself on hover */}
-      <span className={`pointer-events-none absolute inset-3 md:inset-4 ${soon ? 'hidden' : ''}`}>
+      <span className="pointer-events-none absolute inset-3 md:inset-4">
         <span className="absolute top-0 left-0 h-px w-full bg-white/80 origin-left scale-x-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />
         <span className="absolute bottom-0 right-0 h-px w-full bg-white/80 origin-right scale-x-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100" />
         <span className="absolute top-0 right-0 w-px h-full bg-white/80 origin-top scale-y-0 transition-transform duration-700 delay-100 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-y-100" />
@@ -168,7 +159,8 @@ function Tile({ category, index }) {
           <h3 style={SERIF} className={`${category.slug === 'new' ? 'text-[clamp(36px,4.5vw,64px)]' : 'text-[clamp(26px,2.6vw,38px)]'} font-medium leading-none`}>
             {category.label}
           </h3>
-          <span className={`mt-3 overflow-hidden ${soon ? 'hidden' : 'block'}`}>
+          {/* Coming-soon tiles keep Explore's space, empty, so their label lines up with the rest */}
+          <span aria-hidden={soon || undefined} className={`mt-3 block overflow-hidden ${soon ? 'invisible' : ''}`}>
             <span className="flex items-center gap-3 text-[11px] tracking-[0.22em] uppercase font-medium transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:translate-y-full md:group-hover:translate-y-0">
               Explore
               <span className="inline-block w-6 h-px bg-current transition-all duration-700 group-hover:w-10" />
@@ -180,26 +172,21 @@ function Tile({ category, index }) {
   )
 }
 
-const BRAND_LOGO = '/images/logo/embossed-brand-name.png'
-
-// Header entrance, as one timeline: the logo wipes on from the left, the gold rules
-// draw away from the tagline, its two phrases meet at the centre, then View All arrives.
+// Header entrance, as one timeline: the heading's words rise into view in turn, then View
+// All arrives with its line drawing in.
 const headerStep = (hidden, show, delay, duration = 1) => ({
   hidden,
   show: { ...show, transition: { duration, ease: EASE, delay } },
 })
+const HEADING = [
+  { word: 'Explore', italic: false },
+  { word: 'the', italic: false },
+  { word: 'Collection', italic: true },
+]
 const HEADER = {
-  logo: headerStep(
-    { clipPath: 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)', x: -16 },
-    { clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)', x: 0 },
-    0, 1.2,
-  ),
-  rule: headerStep({ scaleX: 0 }, { scaleX: 1 }, 0.3, 1.2),
-  wordsLeft: headerStep({ opacity: 0, x: -28 }, { opacity: 1, x: 0 }, 0.45),
-  wordsRight: headerStep({ opacity: 0, x: 28 }, { opacity: 1, x: 0 }, 0.45),
-  dot: headerStep({ opacity: 0, y: 8 }, { opacity: 1, y: 0 }, 0.85, 0.6),
-  viewLine: headerStep({ scaleX: 0 }, { scaleX: 1 }, 0.6),
-  viewAll: headerStep({ opacity: 0, x: 24 }, { opacity: 1, x: 0 }, 0.7, 0.9),
+  word: (i) => headerStep({ y: '110%', opacity: 0 }, { y: '0%', opacity: 1 }, i * 0.12, 1.1),
+  viewLine: headerStep({ scaleX: 0 }, { scaleX: 1 }, 0.45),
+  viewAll: headerStep({ opacity: 0, x: 24 }, { opacity: 1, x: 0 }, 0.55, 0.9),
 }
 
 export default function CategoryTiles() {
@@ -255,34 +242,24 @@ export default function CategoryTiles() {
           className="-z-10 object-cover object-top"
         />
 
-        {/* Equal side columns keep the tagline centred on the page; it needs the width of a
-            1340px screen to fit between the logo and View All, so narrower screens drop it */}
         <motion.div
           initial="hidden"
           animate={headerIn ? 'show' : 'hidden'}
-          className="flex-shrink-0 flex items-end justify-between min-[1340px]:grid min-[1340px]:grid-cols-[minmax(381px,1fr)_minmax(0,720px)_minmax(381px,1fr)] min-[1340px]:gap-6 h-[84px] md:h-[110px] mb-4 md:mb-6 px-2"
+          className="flex-shrink-0 flex items-end justify-between gap-6 h-[84px] md:h-[110px] mb-4 md:mb-6 px-2"
         >
-          {/* Brand name artwork, the full height of the heading row */}
-          <motion.div variants={HEADER.logo} className="relative h-full aspect-[974/281] justify-self-start">
-            <Image
-              src={BRAND_LOGO}
-              alt="Herada Ceylon"
-              fill
-              priority
-              sizes="(max-width: 768px) 291px, 381px"
-              className="object-contain object-left"
-            />
-          </motion.div>
-
-          <div className="hidden min-[1340px]:flex items-center justify-center gap-5 self-center">
-            <motion.span variants={HEADER.rule} className="hidden min-[1400px]:block flex-1 max-w-[160px] h-px bg-gold/70 origin-right" />
-            <p className="text-[10px] min-[1536px]:text-[12px] tracking-[0.24em] uppercase text-charcoal/80 font-medium whitespace-nowrap">
-              <motion.span variants={HEADER.wordsLeft} className="inline-block">Timeless Elegance</motion.span>
-              <motion.span variants={HEADER.dot} className="inline-block mx-3 text-charcoal">•</motion.span>
-              <motion.span variants={HEADER.wordsRight} className="inline-block">Sri Lankan Craftsmanship</motion.span>
-            </p>
-            <motion.span variants={HEADER.rule} className="hidden min-[1400px]:block flex-1 max-w-[160px] h-px bg-gold/70 origin-left" />
-          </div>
+          {/* Each word rises out of a mask */}
+          <h2 style={SERIF} className="text-[clamp(34px,4.6vw,66px)] font-medium text-charcoal leading-[1.1] whitespace-nowrap">
+            {HEADING.map(({ word, italic }, i) => (
+              <Fragment key={word}>
+                {i > 0 && ' '}
+                <span className="inline-block overflow-hidden align-bottom pb-[0.08em]">
+                  <motion.span variants={HEADER.word(i)} className={`inline-block ${italic ? 'italic' : ''}`}>
+                    {word}
+                  </motion.span>
+                </span>
+              </Fragment>
+            ))}
+          </h2>
 
           <div className="flex items-center justify-end gap-6 pb-2">
             {/* Faint line by View All; it fills to show progress when the tiles scroll sideways */}
@@ -301,7 +278,7 @@ export default function CategoryTiles() {
 
         {/* Visible frame: desktop tiles are full frame height in one row */}
         <div ref={frameRef} className="relative flex-1 min-h-0 overflow-hidden">
-          <motion.div ref={trackRef} style={{ x }} className="grid grid-cols-2 grid-rows-2 lg:flex h-full gap-3 md:gap-4 [perspective:1400px]">
+          <motion.div ref={trackRef} style={{ x }} className="grid grid-cols-2 grid-rows-2 lg:flex h-full gap-3 md:gap-4">
             {TILES.map((category, i) => (
               <Tile key={category.slug} category={category} index={i} />
             ))}

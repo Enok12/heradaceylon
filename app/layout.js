@@ -3,7 +3,6 @@ import { CartProvider } from '@/context/CartContext'
 import Navbar from '@/components/Navbar'
 import CartDrawer from '@/components/CartDrawer'
 import Footer from '@/components/Footer'
-import Loader from '@/components/Loader'
 import PageTransition from '@/components/PageTransition'
 
 export const metadata = {
@@ -16,9 +15,6 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <CartProvider>
-          {/* Intro loader — plays once per session */}
-          <Loader />
-
           {/* Persistent across all routes */}
           <Navbar />
           <CartDrawer />

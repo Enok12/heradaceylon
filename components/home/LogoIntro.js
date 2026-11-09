@@ -12,23 +12,14 @@ export default function LogoIntro() {
   const ref = useRef(null)
   const [start, setStart] = useState(false)
 
-  // Hold the entrance until (1) the logo file is downloaded and decoded, so it's ready to
-  // paint on the first frame, and (2) the site Loader, which covers every full page load,
-  // has left, so the fade-in isn't hidden behind it
+  // Hold the entrance until the logo file is downloaded and decoded, so it's ready to paint
+  // on the first frame
   useEffect(() => {
     let cancelled = false
-    let poll
     const img = new window.Image()
     img.src = LOGO
-    img.decode().catch(() => {}).then(() => {
-      if (cancelled) return
-      poll = setInterval(() => {
-        if (document.querySelector('[data-loader]')) return
-        clearInterval(poll)
-        setStart(true)
-      }, 50)
-    })
-    return () => { cancelled = true; clearInterval(poll) }
+    img.decode().catch(() => {}).then(() => { if (!cancelled) setStart(true) })
+    return () => { cancelled = true }
   }, [])
 
   // Logo drifts up and fades if the visitor drags the scrollbar on to the categories
