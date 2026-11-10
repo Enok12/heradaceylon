@@ -21,7 +21,7 @@ export default function ContactPage() {
     >
       <dl className="grid sm:grid-cols-2 gap-px bg-sand border border-sand rounded-2xl overflow-hidden mb-12">
         {CHANNELS.map(({ label, value }) => (
-          <div key={label} className="bg-cream p-6">
+          <div key={label} className="bg-white p-6">
             <dt className="text-[11px] tracking-[0.2em] uppercase text-muted font-medium mb-2">{label}</dt>
             <dd className="text-[15px] leading-relaxed text-charcoal"><Fill>{value}</Fill></dd>
           </div>

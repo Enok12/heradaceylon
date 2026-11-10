@@ -682,7 +682,7 @@ export default function CheckoutPage() {
   const stepMap = { 1: 'Information', 2: 'Shipping', 3: 'Payment' }
 
   return (
-    <div className="min-h-screen bg-cream pt-[72px]">
+    <div className="min-h-screen bg-white pt-[72px]">
       <div className="max-w-[1100px] mx-auto px-4 py-10 md:py-16">
         {/* Logo */}
         <div className="text-center mb-10">

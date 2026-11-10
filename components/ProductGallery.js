@@ -39,7 +39,7 @@ export default function ProductGallery({ images, name }) {
               aria-label={`View image ${i + 1}`}
               className={`relative w-[100px] h-[125px] rounded-lg overflow-hidden bg-sand transition-all duration-300 ${
                 active === i
-                  ? 'ring-1 ring-charcoal ring-offset-2 ring-offset-cream'
+                  ? 'ring-1 ring-charcoal ring-offset-2 ring-offset-white'
                   : 'opacity-50 hover:opacity-80'
               }`}
             >

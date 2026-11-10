@@ -83,7 +83,7 @@ export default function ProductPage({ params }) {
   ]
 
   return (
-    <div className="bg-cream pt-[72px]">
+    <div className="bg-white pt-[72px]">
       {/* Sticky Add to Cart Bar */}
       <AnimatePresence>
         {showStickyBar && (
@@ -312,7 +312,7 @@ export default function ProductPage({ params }) {
 
       {/* You May Also Like */}
       {related.length > 0 && (
-        <div className="border-t border-sand py-20 bg-linen">
+        <div className="border-t border-sand py-20 bg-white">
           <div className="px-8 md:px-16 mb-12">
             <p className="text-[9px] tracking-[0.28ex] uppercase text-gold font-normal mb-3 flex items-center gap-3">
               <span className="w-5 h-px bg-gold" />Continue

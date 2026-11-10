@@ -7,7 +7,6 @@ import products from '@/data/products.json'
 import { CATEGORIES } from '@/lib/categories'
 
 const EASE = [0.16, 1, 0.3, 1]
-const SERIF = { fontFamily: "'Cormorant Garamond', Georgia, serif" }
 
 // Categories shown for now. The rest (Sarees, Contemporary, Accessories, Bags) stay in
 // lib/categories.js. Adding slugs here brings back the sideways scroll on desktop: the
@@ -129,7 +128,7 @@ function Tile({ category, index }) {
         // No photography yet: a typographic tile
         <span
           aria-hidden="true"
-          style={SERIF}
+         
           className="absolute inset-0 flex items-center justify-center text-[clamp(56px,7vw,110px)] font-medium tracking-[0.06em] text-transparent [-webkit-text-stroke:1px_rgba(247,243,238,0.35)] transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-2"
         >
           {category.label.toUpperCase()}
@@ -156,7 +155,7 @@ function Tile({ category, index }) {
           <p className="text-[11px] tracking-[0.22em] uppercase font-medium text-white/75 mb-1.5">
             {soon || count === 0 ? 'Coming soon' : `${count} ${count === 1 ? 'piece' : 'pieces'}`}
           </p>
-          <h3 style={SERIF} className={`${category.slug === 'new' ? 'text-[clamp(36px,4.5vw,64px)]' : 'text-[clamp(26px,2.6vw,38px)]'} font-medium leading-none`}>
+          <h3 className={`${category.slug === 'new' ? 'text-[clamp(36px,4.5vw,64px)]' : 'text-[clamp(26px,2.6vw,38px)]'} font-medium leading-none uppercase tracking-[0.04em]`}>
             {category.label}
           </h3>
           {/* Coming-soon tiles keep Explore's space, empty, so their label lines up with the rest */}
@@ -178,11 +177,7 @@ const headerStep = (hidden, show, delay, duration = 1) => ({
   hidden,
   show: { ...show, transition: { duration, ease: EASE, delay } },
 })
-const HEADING = [
-  { word: 'Explore', italic: false },
-  { word: 'the', italic: false },
-  { word: 'Collection', italic: true },
-]
+const HEADING = [{ word: 'EXPLORE', italic: false }]
 const HEADER = {
   word: (i) => headerStep({ y: '110%', opacity: 0 }, { y: '0%', opacity: 1 }, i * 0.12, 1.1),
   viewLine: headerStep({ scaleX: 0 }, { scaleX: 1 }, 0.45),
@@ -230,25 +225,15 @@ export default function CategoryTiles() {
   }, [])
 
   return (
-    <section ref={outerRef} className="relative bg-cream" style={{ height: `calc(100svh + ${overflow}px)` }}>
+    <section ref={outerRef} className="relative bg-white" style={{ height: `calc(100svh + ${overflow}px)` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden flex flex-col px-4 md:px-12 pt-[88px] md:pt-[92px] pb-4 md:pb-5">
-        {/* Silk background, anchored to the top so its waves sit behind the header row */}
-        <Image
-          src="/images/backgrounds/ivory-silk-waves.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="-z-10 object-cover object-top"
-        />
-
         <motion.div
           initial="hidden"
           animate={headerIn ? 'show' : 'hidden'}
           className="flex-shrink-0 flex items-end justify-between gap-6 h-[84px] md:h-[110px] mb-4 md:mb-6 px-2"
         >
           {/* Each word rises out of a mask */}
-          <h2 style={SERIF} className="text-[clamp(34px,4.6vw,66px)] font-medium text-charcoal leading-[1.1] whitespace-nowrap">
+          <h2 className="text-[clamp(34px,4.6vw,66px)] font-medium text-charcoal leading-[1.1] tracking-[0.06em] whitespace-nowrap">
             {HEADING.map(({ word, italic }, i) => (
               <Fragment key={word}>
                 {i > 0 && ' '}

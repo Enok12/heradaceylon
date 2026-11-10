@@ -92,7 +92,7 @@ export default function Navbar() {
         animate={visible || menuOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: -16 }}
         transition={{ duration: 0.6, ease: EASE }}
         className={`fixed top-0 left-0 right-0 z-[210] h-[72px] transition-colors duration-300 ${
-          menuOpen ? 'bg-white shadow-[0_1px_0_rgba(0,0,0,0.1)]' : 'bg-white/90 backdrop-blur-sm shadow-[0_1px_0_rgba(0,0,0,0.06)]'
+          menuOpen ? 'bg-sand shadow-[0_1px_0_rgba(0,0,0,0.1)]' : 'bg-sand/95 backdrop-blur-sm shadow-[0_1px_0_rgba(0,0,0,0.06)]'
         } ${visible || menuOpen ? '' : 'pointer-events-none'}`}
       >
         <div className="relative flex items-center justify-between h-full px-6 md:px-12">

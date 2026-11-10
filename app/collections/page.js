@@ -317,7 +317,7 @@ export default function CollectionsPage() {
   )
 
   return (
-    <div className="min-h-screen bg-cream pt-[72px]">
+    <div className="min-h-screen bg-white pt-[72px]">
       {/* Hero Banner */}
       <div className="relative h-[280px] md:h-[360px] overflow-hidden flex items-end bg-charcoal">
         <div
@@ -361,7 +361,7 @@ export default function CollectionsPage() {
       </div>
 
       {/* Toolbar: moves up into the navbar's space while the navbar is hidden */}
-      <div ref={toolbarRef} className={`sticky z-40 bg-cream/95 backdrop-blur-sm px-4 md:px-8 py-3 transition-[top] duration-200 ${navHidden ? 'top-0' : 'top-[72px]'}`}>
+      <div ref={toolbarRef} className={`sticky z-40 bg-white/95 backdrop-blur-sm px-4 md:px-8 py-3 transition-[top] duration-200 ${navHidden ? 'top-0' : 'top-[72px]'}`}>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <button
             onClick={() => setFilterOpen(o => !o)}

@@ -94,7 +94,7 @@ export default function ConfirmationPage() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className="min-h-screen bg-cream pt-[72px]">
+    <div className="min-h-screen bg-white pt-[72px]">
       <div className="max-w-[680px] mx-auto px-6 py-16 md:py-24">
 
         {/* Logo */}
@@ -159,7 +159,7 @@ export default function ConfirmationPage() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.9 + i * 0.12, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="bg-cream px-6 py-7 text-center"
+                className="bg-white px-6 py-7 text-center"
               >
                 <div className="text-2xl mb-4 opacity-60">{step.icon}</div>
                 <p className="text-[10px] tracking-[0.16em] uppercase text-charcoal font-normal mb-2">{step.title}</p>

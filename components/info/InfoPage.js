@@ -42,7 +42,7 @@ export function Section({ title, children }) {
 // Shared layout for the About, Contact, FAQ and policy pages
 export default function InfoPage({ eyebrow, title, intro, updated, children }) {
   return (
-    <div className="min-h-screen bg-cream pt-[72px]">
+    <div className="min-h-screen bg-white pt-[72px]">
       <header className="px-6 md:px-16 pt-14 md:pt-20 pb-10 md:pb-14 border-b border-sand">
         <div className="max-w-3xl mx-auto">
           <p className="hero-fade-up flex items-center gap-3 text-[11px] tracking-[0.28em] uppercase text-gold font-medium mb-4">
