@@ -27,7 +27,7 @@ export default function ProductCard({ product, priority = false, infoClassName =
       <Link href={`/product/${product.slug}`} className="block no-underline">
         {/* Image Container */}
         {/* translateZ(0) keeps the rounded corners clipping while the photo zooms on hover */}
-        <div className="relative overflow-hidden rounded-2xl bg-sand aspect-[3/4] mb-4 [transform:translateZ(0)]">
+        <div className="relative overflow-hidden rounded-lg bg-sand aspect-[3/4] mb-4 [transform:translateZ(0)]">
           {/* Primary Image */}
           <Image
             src={product.images[0]}

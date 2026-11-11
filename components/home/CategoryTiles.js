@@ -91,7 +91,7 @@ function Tile({ category, index }) {
       whileInView={{ clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' }}
       viewport={VIEWPORT}
       transition={{ duration: 1.1, ease: EASE, delay: delayFor(index) }}
-      className={`group ${soon ? 'cursor-default' : ''} relative block flex-shrink-0 h-full overflow-hidden rounded-2xl no-underline ${WIDTHS[category.slug] ?? UNIT} ${
+      className={`group ${soon ? 'cursor-default' : ''} relative block flex-shrink-0 h-full overflow-hidden rounded-lg no-underline ${WIDTHS[category.slug] ?? UNIT} ${
         category.image ? 'bg-sand' : 'bg-charcoal'
       }`}
     >
