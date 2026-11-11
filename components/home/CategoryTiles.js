@@ -233,7 +233,7 @@ export default function CategoryTiles() {
           className="flex-shrink-0 flex items-end justify-between gap-6 h-[84px] md:h-[110px] mb-4 md:mb-6 px-2"
         >
           {/* Each word rises out of a mask */}
-          <h2 className="text-[clamp(34px,4.6vw,66px)] font-medium text-charcoal leading-[1.1] tracking-[0.06em] whitespace-nowrap">
+          <h2 className="text-[clamp(34px,4.6vw,66px)] font-medium text-[#646466] leading-[1.1] tracking-[0.06em] whitespace-nowrap">
             {HEADING.map(({ word, italic }, i) => (
               <Fragment key={word}>
                 {i > 0 && ' '}
