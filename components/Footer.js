@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion, useInView, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { useRef, useState } from 'react'
 
 const SHOP = ['New Arrivals', 'Sarees', 'Handloom', 'Contemporary', 'Accessories', 'Gift Cards']
@@ -19,49 +19,43 @@ const PAGES = {
 
 const EASE = [0.16, 1, 0.3, 1]
 
-// Silk band between the links and the copyright line: the HERADA wordmark sits in the
-// fabric as in the artwork. The silk drifts slower than the page (parallax) and the
-// wordmark rises out of a blur as the band comes into view.
+// The footer's second section: the silk artwork with the HERADA wordmark centred near its
+// top. On large screens the section is one screen tall with the bottom bar under it, and
+// the picture fills all the space above the bar, edge to edge (any trimming comes off the
+// white haze at its top first). On phones it shows whole at the screen's width. The picture
+// fades in and the wordmark slides down into place as it fades in.
 function SilkBand() {
   const ref = useRef(null)
   const reduce = useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] })
-  const silkY = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['-10%', '0%'])
-  // Watch the whole strip, not the wordmark: on phones the strip is short, and the
-  // wordmark's starting offset leaves too little of it showing to trigger by itself
-  const bandIn = useInView(ref, { once: true, amount: 0.4 })
-  const wordY = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['12%', '0%'])
+  // Wait until most of the picture is showing, so the entrance plays as section 2 arrives
+  const bandIn = useInView(ref, { once: true, amount: 0.75 })
+  const show = (hidden, shown, duration, delay = 0) => ({
+    initial: hidden,
+    animate: bandIn ? shown : undefined,
+    transition: { duration: reduce ? 0 : duration, ease: EASE, delay: reduce ? 0 : delay },
+  })
 
   return (
-    // A slim strip, about as tall as the wordmark, which runs the full width of the
-    // footer's content like the reference
-    <div ref={ref} className="relative overflow-hidden px-8 md:px-16 pt-[5vw] pb-[1.6vw]">
-      <motion.div style={{ y: silkY }} className="absolute inset-x-0 -top-[15%] h-[130%]">
+    <div ref={ref} className="relative lg:flex-1 lg:min-h-0">
+      <div className="relative w-full aspect-[3168/1344] lg:aspect-auto lg:h-full">
         <motion.div
           className="absolute inset-0"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: reduce ? 0 : 1.6, ease: EASE }}
+          {...show({ opacity: 0 }, { opacity: 1 }, 1.6)}
         >
-          <Image src="/images/footer/footer-silk-plain.jpg" alt="" fill sizes="100vw" className="object-cover object-[50%_62%]" />
+          <Image src="/images/footer/footer-silk-plain.jpg" alt="" fill sizes="100vw" className="object-cover object-bottom" />
         </motion.div>
-      </motion.div>
 
-      {/* Soft white fade over the top edge, so the strip melts into the footer */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[38%] bg-gradient-to-b from-white via-white/60 to-transparent" />
-
-      <motion.div style={{ y: wordY }} className="relative w-full aspect-[2400/386]">
-        <motion.div
-          className="absolute inset-0"
-          initial={{ opacity: 0, y: 30, filter: 'blur(12px)' }}
-          animate={bandIn ? { opacity: 1, y: 0, filter: 'blur(0px)' } : undefined}
-          transition={{ duration: reduce ? 0 : 1.8, ease: EASE, delay: reduce ? 0 : 0.2 }}
-          onUpdate={() => {}}
-        >
-          <Image src="/images/footer/footer-wordmark.png" alt="Herada" fill sizes="100vw" className="object-contain drop-shadow-[0_2px_10px_rgba(40,50,90,0.25)]" />
-        </motion.div>
-      </motion.div>
+        {/* Positioned by a plain wrapper: the animation sets its own transform, which would replace a centring translate */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-[22%] w-[50%] aspect-[2400/386]">
+          <motion.div
+            className="absolute inset-0"
+            {...show({ opacity: 0, y: -60 }, { opacity: 1, y: 0 }, 1.4, 0.3)}
+            onUpdate={() => {}}
+          >
+            <Image src="/images/footer/footer-wordmark.png" alt="Herada" fill sizes="100vw" className="object-contain" />
+          </motion.div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -77,8 +71,10 @@ export default function Footer() {
 
   return (
     <footer className="bg-white text-charcoal/80 border-t border-charcoal/10">
+      {/* Section 1: the newsletter and the link columns */}
+      <div>
       {/* Newsletter Strip */}
-      <div className="border-b border-charcoal/10 px-8 md:px-16 py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+      <div className="border-b border-charcoal/10 flex-shrink-0 px-8 md:px-16 py-12 lg:py-7 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
         <div>
           <p className="text-[12px] tracking-[0.26em] uppercase text-gold mb-3 font-medium">Private Access</p>
           <h3 className="font-serif text-[36px] md:text-[40px] font-normal leading-tight text-charcoal">
@@ -109,11 +105,11 @@ export default function Footer() {
       </div>
 
       {/* Main Grid */}
-      <div className="px-8 md:px-16 pt-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-10 md:pb-6">
+      <div className="px-8 md:px-16 pt-12 lg:pt-10 pb-4 lg:pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-8 lg:pb-2">
           {/* Brand, then each link column, fade up in turn */}
           <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease: EASE, delay: 0 }}>
-            <span className="block font-serif text-[26px] font-normal text-charcoal tracking-[0.2em] uppercase mb-4">
+            <span className="block font-serif text-[36px] font-normal text-charcoal tracking-[0.2em] uppercase mb-4">
               Herada Ceylon
             </span>
             <p className="text-[14px] leading-relaxed text-charcoal/65 font-normal tracking-[0.02em] mb-7 max-w-[280px]">
@@ -131,8 +127,8 @@ export default function Footer() {
           {/* Links */}
           {[['Shop', SHOP], ['Information', INFO], ['Customer Care', CARE]].map(([heading, links], i) => (
             <motion.div key={heading} initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.9, ease: EASE, delay: 0.1 + i * 0.1 }}>
-              <h4 className="text-[12px] tracking-[0.22em] uppercase text-charcoal font-semibold mb-5">{heading}</h4>
-              <ul className="space-y-3">
+              <h4 className="text-[12px] tracking-[0.22em] uppercase text-charcoal font-semibold mb-3">{heading}</h4>
+              <ul className="space-y-1.5">
                 {links.map(l => (
                   <li key={l}>
                     <Link href={PAGES[l] ?? '#'} className="text-[14px] text-charcoal/70 font-normal tracking-[0.02em] hover:text-charcoal transition-colors duration-300 no-underline">
@@ -147,9 +143,13 @@ export default function Footer() {
 
       </div>
 
+      </div>
+
+      {/* Section 2: the silk picture with the wordmark, and the bottom bar; one screen tall on large screens */}
+      <div className="lg:h-[100svh] lg:min-h-[560px] lg:flex lg:flex-col">
       <SilkBand />
 
-      <div className="px-8 md:px-16 py-8">
+      <div className="flex-shrink-0 px-8 md:px-16 py-6">
         {/* Bottom Bar: credit on the left, the slogan centred, policies on the right. The two
             outer columns share the spare width equally, so the slogan sits on the page's centre. */}
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_auto_1fr] items-start lg:items-center gap-4 lg:gap-8">
@@ -181,6 +181,7 @@ export default function Footer() {
             ))}
           </div>
         </div>
+      </div>
       </div>
     </footer>
   )
